@@ -22,3 +22,6 @@ References:
 Python 2.x with numpy and scipy.
 
 For the MTCKD continuum model: gmake and gfortran.
+
+# Acknowledgements
+PyRADS makes use of HITRAN 2016 line lists (http://hitran.org/), AER's MTCKD continuum model (http://rtweb.aer.com/continuum_frame.html), and the PyTran script published by Ray Pierrehumbert as part of the courseware for "Principles of Planetary Climates" (https://geosci.uchicago.edu/~rtp1/PrinciplesPlanetaryClimate/).
