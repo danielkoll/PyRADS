@@ -14,8 +14,13 @@ References:
 2) Manually compile the MTCKD model:
 - cd $PyRADS/DATA/MT_CKD_continuum/cntnm.H2O_N2/build
 - (on a Mac) make -f make_cntnm osxGNUdbl
-3) Run test script
-- cd $PyRADS/Test01
+3) Run test scripts
+To compute outgoing longwave radiation (OLR) in W/m2 for a given surface temperature: 
+- cd $PyRADS/Test01.olr 
+- python compute_olr_h2o.py
+
+To compute OLRs for a set of surface temperatures and save the resulting output to txt:
+- cd $PyRADS/Test02.runaway
 - python compute_olr_h2o.01.100RH.py
 
 # Requirements
