@@ -15,7 +15,7 @@ References:
 - cd $PyRADS/DATA/MT_CKD_continuum/cntnm.H2O_N2/build
 - (on a Mac) gmake -f make_cntnm osxGNUdbl
 3) Run test
-- cd $PyRADS/Test01.Compute_OLR_H2O
+- cd $PyRADS/Test01
 - python compute_olr_h2o.01.100RH.py
 
 # Requirements
