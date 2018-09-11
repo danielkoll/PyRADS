@@ -1,0 +1,42 @@
+
+1) For path length = 0., CNTNM.OPTDPT files produce NaN's
+
+2) WATER.COEF files are independent of path length
+3) WATER.COEF files are independent of vmr
+4) WATER.COEF files are independent of pressure
+
+5) WATER.COEF files are *not* independent of T
+   -> also doesn't scale as ~1/T, instead something that looks more complicated [?]
+   -> foreign broadening coef (without radiation field) *is* independent of T [?]
+
+
+6) when I recompile the source code without N2,CO2, etc.
+   the WATER.COEF files don't change!
+   -> species are only used to compute optical thickness?
+
+
+7) To use an input file do:
+
+   INPUT NEEDS TO BE LINE SEPARATED (p/T/dz/vmr H2O), e.g.,
+   ---
+   1000.
+   300.
+   0.0
+   0.01
+   ---
+
+   AND THEN run "./cntnm.exe < INPUT"
+
+==============
+
+To use in my radiation code, need a wrapper that can pass in relevant T (and p?),
+gets coefficients from that, and then scales them to get kappa?
+
+OR:
+make a wrapper that converts my inputs into the right molecular amounts, i.e.,
+path length (of total air?) and H2O VMR, and then reads from the optical depth file.
+
+-------
+TO DO:
+test my code by computing optical depth from the WATER.COEF file,
+and then compare with the CNTNM.OPTDPT file.

@@ -1,0 +1,59 @@
+# $Revision: 31594 $
+# Makefile for cntnm
+# From cntnm/build directory, type: gmake -f make_cntnm <TARGET>
+
+# Include file containing user input. Directory is referenced to 
+# parent directory and common build rules
+include makefile.common
+
+###############################
+# Set variables/
+###############################
+#Set version name.  Used in the default OUTPUT and OBJPATH variables.  If you
+# change those two variables from what is provided here, no need to set this variable.
+
+PRODUCT = cntnm
+VERSION = v3.2
+
+# Set name of CNTNM executable.  
+OUTPUT = ${PRODUCT}_$(VERSION)_$(PLTFRM)_$(FC_TYPE)_$(P_TYPE)
+
+# Set directory for object files.  
+OBJPATH = ${PRODUCT}_$(VERSION)_$(PLTFRM)_$(FC_TYPE)_$(P_TYPE).obj
+
+# Set directory containing source files, relative to main directory from which
+# you are executing the makefile
+SRCPATH = ../src
+
+
+# Files contained in src directory.  If additional .f files are added,
+# add to this list. 
+SRCS = cntnm_progr.f90 contnm.f90 lblparams.f90 phys_consts.f90 planet_earth.f90
+
+# Define makefile name
+MAKEFILE=make_$(PRODUCT)
+
+# Object file names
+OBPATH = ${SRCS:.f=.o}
+
+build : $(OBJPATH)/cntnm_progr.o $(OBJPATH)/contnm.o $(OBJPATH)/lblparams.o $(OBJPATH)/phys_consts.o $(OBJPATH)/planet_earth.o      	
+	$(FC) $(FCFLAG) -o ../$(OUTPUT) ${OBJPATH}/*.o
+
+## Define dependancies
+
+$(OBJPATH)/cntnm_progr.o:   ${SRCPATH}/cntnm_progr.f90 ${SRCPATH}/contnm.f90 lblparams.mod phys_consts.mod planet_consts.mod
+	$(FC) -c $(FCFLAG) -I$(SRCPATH) $< -o $@
+$(OBJPATH)/contnm.o:	$(SRCPATH)/contnm.f90 lblparams.mod phys_consts.mod 
+	$(FC) -c $(FCFLAG) -I$(SRCPATH) $< -o $@
+lblparams.mod:	$(SRCPATH)/lblparams.f90
+	$(FC) -c $(FCFLAG) $< -o $(OBJPATH)/lblparams.o
+phys_consts.mod:	$(SRCPATH)/phys_consts.f90
+	$(FC) -c $(FCFLAG) $< -o $(OBJPATH)/phys_consts.o
+planet_consts.mod:	$(SRCPATH)/planet_earth.f90
+	$(FC) -c $(FCFLAG) -I. $< -o $(OBJPATH)/planet_earth.o
+$(OBJPATH)/lblparams.o:	$(SRCPATH)/lblparams.f90
+	$(FC) -c $(FCFLAG) -I. $< -o $@
+$(OBJPATH)/phys_consts.o:	$(SRCPATH)/phys_consts.f90
+	$(FC) -c $(FCFLAG) $< -o $@
+$(OBJPATH)/planet_earth.o:	$(SRCPATH)/planet_earth.f90  phys_consts.mod
+	$(FC) -c $(FCFLAG) -I. $< -o $@

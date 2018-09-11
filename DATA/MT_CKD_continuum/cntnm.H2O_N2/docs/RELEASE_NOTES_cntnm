@@ -1,0 +1,471 @@
+************************************************************************
+
+Release Notes for MT_CKD
+
+            AER Inc., 
+            131 Harwell Avenue 
+            Lexington,  MA  02421
+
+************************************************************************
+MT_CKD_3.2
+
+Date: August 2017
+
+    - New self continnum coeffients in window regions for wavenumbers 
+      greater than 2000 cm-1 were added and self continuum temperature 
+      dependence from 1800-3500 cm-1 were updated 
+      (E.J. Mlawer, M.J. Alvarado, K.E. Cady-Pereira)
+
+MT_CKD_3.1
+
+Date: July 2017 (not publicly released)
+
+    - Collision-induced absorption in the oxygen A-band 
+      was added (E.J. Mlawer, D. Gombos, V.H. Payne, B. Drouin,
+      K.E. Cady-Pereira)
+
+MT_CKD_3.0:
+
+Date: November 2016
+
+    - Includes modifications to H2O foreign continuum coefficients in the
+      far-infrared based on the analysis of REFIR-PAD (Bianchini and Palchetti, 2008) 
+      measurements taken at Cerro Toco, Chile, as part of the ARM RHUBC-II campaign and a 
+      re-analysis of the AERI-ER measurements from the ARM NSA site (first analyzed 
+      in Delamere et al.(2010)). The foreign continuum was also changed in the sub-
+      millimeter and microwave as a result of the analysis of SAO FTS (Paine and Turner,
+      2013) measurements taken during the RHUBC-II campaign, which led to modification 
+      of the H2O self continuum in this region to maintain good agreement with the 
+      microwave measurements analyzed in Payne et al. (2008 and 2011). (E.J. Mlawer, D.D. 
+      Turner, S.N. Paine, V.H. Payne)                                               
+
+MT_CKD_2.8:
+
+Date: July 2016
+
+    - A number of changes were made to continuum absorption involving 
+      water vapor in the window past the H2O fundamental band.  Self 
+      continuum coefficients were modified from 1880-2390 cm-1 to fix 
+      issues in the CO fundamental region that were pointed out by 
+      Alvarado et al. (2012). Foreign continuum coefficients from 
+      1800-3000 cm-1 were modified to improve agreement with Baranov 
+      and Lafferty (2012); in the 1900-2150 cm-1 region, attention 
+      was also paid to IASI measurements (Alvarado et al., 2012). 
+      Coefficients for N2-H2O relative efficiency from 2000-2900 cm-1 
+      were determined from Baranov and Lafferty simultaneously with 
+      the H2O foreign and self continuum coefficients in this 
+      region (as described above).
+
+    - In addition, foreign continuum coefficients at wavenumbers 
+      greater than 4000 cm-1 were modified based on Baranov & 
+      Lafferty (2012) and Mondelain et al. (2014) measurements.
+      (E.J. Mlawer and M.J. Alvarado)
+
+MT_CKD_2.7:
+
+Date: February 2016
+
+    - Added first overtone of the N2 collision induced fundamental. (E. J. Mlawer, D. Gombos)
+ 
+    - Fixed bug in calculation of temperature analytic Jacobians. (E. J. Mlawer, K. E. Cady-Pereira)
+
+MT_CKD_2.5.2:
+
+Date: January 2011
+
+    - Added ‘if’ tests needed for speed improvements in monortm (K. E. Cady-Pereira, E.J. Mlawer)
+
+    - Other software updates include:
+	* In N2 pure rotation band, fixed incorrect indexing related to contribution from N2-O2 
+	(E.J. Mlawer, A.E. Lipton, V.H. Payne)
+        * Increased number of output points in all continuum modules to prevent possible truncation at
+	high wavenumber end (E.J. Mlawer, S.A. Clough, C.H. Kohler)
+	* Near-IR O2 continuum modified to allow for calculations over domains greater than 2000 cm-1; 
+	needed by standalone continuum code (E.J. Mlawer, P. Hedelt)
+	* O2 fundamental modified to correct 5 cm-1 shift (E.J. Mlawer, S.A. Clough, C.H. Kohler)
+	* Rayleigh is now computed for IAERSL=5 (E.J. Mlawer, K.E. Cady-Pereira)
+
+    - Updated historical information (E.J. Mlawer, V.H. Payne)
+
+    - Corrected coding issue related to pure water vapor atmospheres in stand-alone continuum model (E.J. Mlawer).
+
+    - Modified directory structure for source codes, makefiles, and documentation.
+
+    - Added makefile system to compile the stand-alone continuum model.  Includes new platforms such as Windows and capability to easily add new platforms. 
+
+************************************************************************
+MT_CKD_2.5.1 (AER Internal Release Only):
+
+Date: May 2010
+
+      - Variables added to physical constants common block (J. Delamere) only in contnm.f (cntnm_progr.f not updated)
+
+MT_CKD_2.5:
+
+Date: January 2010
+
+MT_CKD_2.5 continuum modifications included in this release are based on analyses of 
+IASI, AIRS, and AERI measurements in the region past the bandhead of the CO2 
+v3 band (~2385 cm-1):
+
+      - Introduction of temperature dependence of carbon dioxide continuum absorption 
+      from 2386-2434 cm-1 from IASI measurements (E.J. Mlawer and V.H. Payne)
+
+      - Modification of carbon dioxide continuum coefficients from 2000-3000 cm-1 from 
+      IASI and AERI (from ARM) measurements (E.J. Mlawer, V.H. Payne, and M.W. Shephard)
+
+      - Modification of water vapor self continuum coefficients from 2000-3200 cm-1 from 
+      IASI and AIRS measurements; fit based on near-IR studies of Bicknell et al. (2006) and 
+      Fulghum and Tilleman (1991) (E.J. Mlawer and V.H. Payne)
+************************************************************************
+MT_CKD_2.4:  
+
+Date: June 2009
+
+Modifications to the water vapor continuum arise from new analyses of ARM measurements in the 
+microwave and far-IR regions (S.A. Clough, J. Delamere, V.H. Payne, E.J. Mlawer)
+
+- Analyses of measurements in the microwave are based primarily on the two-channel MWR (23.8 and 31.4 GHz) at SGP, 
+  with supporting evidence from 150 GHz MWRHF measurements during the COPS campaign and from 170 GHz GVRP 
+  measurements at SGP (Payne et al., 2009).
+- Measurements in the far-IR were from the AERI_ext at the NSA site, in the time surrounding and including 
+  the RHUBC-I campaign (Delamere et al., 2009).
+
+Fixed an issue with the water vapor Jacobians in which the analytic Jacobians were dependent on the starting 
+wavenumber (MT_CKD_2.3). (K.E. Cady-Pereira and S. Tjemkes)
+
+Solved the issue of N2 Jacobians being included in the Jacobians generated for other 
+molecules (MT_CKD_2.2) (S.A. Clough and M.W. Shephard)
+
+************************************************************************
+MT_CKD_2.1
+
+Date: November 2007
+
+CO2: Fundamental change in the lblrtm fourth function with consequent changes in continuum.
+Bug fix impacting the nitrogen continuum in the 0-350 cm-1 region.      
+             
+************************************************************************
+MT_CKD_2.0
+
+Date: September 2007
+
+CO2: Based on Hartmann P-Q-R line mixing.  Modification to v3 band based on AIRS data.   (July 2007)
+H2O foreign modified in 250-550 cm-1 region based on analyses of nsa aeri_xr data.  (September 2007)	
+
+************************************************************************
+MT_CKD_1.3
+
+Date: May 2006
+
+Nu2 CO2: with P-R line mixing included; factor of 7 increase has been reduceed to 4.5
+
+************************************************************************
+MT_CKD_1.2
+
+Date: 22 September 2004
+
+MT_CKD_1.2 includes a modification to the collision induced absorption by 
+N2 in the 0-350 cm-1 regime, Boissoles et al. (2003).
+
+The structure of cntnm_progr.f has been altered somewhat to ensure closer
+correlation betweem this continuum program and the continuum used in lblrtm.
+The actual continuum module, contnm.f, is introduced into the present program
+with an include statement.  The contnm.f module is that archived with lblrtm.
+
+************************************************************************
+MT_CKD_1.1
+
+Date: 6 August 2004
+
+
+MT_CKD_1.1 represents a modification of MT_CKD_1.0 for which the foreign
+water vapor continuum in the 250 - 550 cm-1 range have been modified to
+provide results consistent with CKD_2.4.1 in this spectral region.
+
+The input water vapor mixing ratio is now interpreted as the mixing ratio 
+with respect to DRY air.
+
+The name of the output files have been modified slightly to
+WATER.coeff and CNTNM.optdpt 
+
+************************************************************************
+MT_CKD_1.0
+
+
+Date: 11 February 2003
+
+This is the initial release of the MT_CKD water vapor continuum and
+represents the  first recomputation of the entire self and foreign
+broadened continuum since the original model was developed in the 
+1980s.  This version of the continuum is implemented in the line-by-line
+model LBLRTM v7.0 and will be utilized in all related AER Radiative 
+Transfer models.
+
+The MT_CKD continuum is based on a new formulation: The self and foreign
+continuum models are each based on the contributions from two components:
+a collision induced component and a line shape component.  This change in
+perspective has resulted from the difficulty in developing a line shape
+model based on sound physics that explains the magnitude of the increased
+absorption in the intermediate wing over that provided by the impact 
+approximation.
+
+These two components are applied consistently to all water vapor lines 
+from the microwave to the visible, and the results summed to obtain self 
+and foreign continuum coefficients from 0-20,000 cm-1.  Eight and seven 
+parameters are needed to specify the two components for the self and 
+foreign continua, respectively, which are sufficient to generate the 
+entire continuum spectrum over this spectral domain.  The ratio of the 
+self continuum at 296 K to that at 260 K has been kept the same as in the 
+CKD model.  The only temperature dependence for the foreign continuum 
+arises from the radiation term as with CKD.  The MT_CKD model as with CKD, 
+should be regarded as a semi empirical model with strong constraints 
+provided by the known physics.
+
+The data that have been used to develop the new continuum model has come 
+predominantly from spectral atmospheric measurements.  Only cases for which 
+the characterization of the atmospheric state has been highly scrutinized 
+have been used.  This new model has been developed by E.J. Mlawer, 
+D.C. Tobin and S.A. Clough building on the original CKD formulation; hence 
+the name MT_CKD.
+
+
+For this release of the continuum model, the stand alone program, 
+
+                  cntnm_progr.f      
+
+is being provided. 
+
+The driver for this program enables input of the follwing pat variables: 
+pressure, temperature path length and water vapor volume mixing ratio.  
+A negative value for the pressure provides a default result from 
+0 - 5000 cm-1 with P = 1013 mb, T = 296 k,  X (path) = 1 cm and vmr_h2o = 0.01.
+
+In addition to the original version of ckd_0, there are three archived versions 
+of ckd available with the release dates indicated:
+
+ckd_2.4.2     2002_01        $Revision: 5.17
+
+ckd_2.4.1     2000_04        revision:  5.12
+
+ckd_2.2.2     1999_06        revision:  3.12
+
+ckd_2.2       1996_03        revision:  3.7
+
+ckd_0         1989
+
+These models with associated readme files are contained in the directories 
+associated with the continuum.  Information on the nature of the modifications 
+is contained in the respective readme files.  The continuum module and associated 
+continuum program (_program_) are very similar except that the latter includes a 
+driver and a small modification has been made in 'SUBROUTINE CONTNM' to provide 
+the appropriate interface.  The main substance of the code are data statements 
+which are not only identical between continuum module and program, but up to this 
+point are similar between the three evolutionary versions of the CKD continnum models.
+
+Remarks on implementing the stand alone program are contained in
+comments in the main progam: 'drcntnm' (driver for continuum).  The
+program provides the following output files:
+
+WATER.COEF - the mt_ckd_# self and foreign broadened water continuum coefficients.
+
+CNTNM.OPTDPT - continuum optical depths for the defined path.
+
+
+******   It should be noted that the MT_CKD water vapor continuum model
+******   spans the spectral domain from 0 - 20,000 cm-1 (inf - 500 nm).
+
+------------------------------------------------------------------------------------
+
+VERSIONS OF THIS CONTINUUM MODEL ARE USED IN AER RADIATIVE TRANSFER MODELS INCLUDING 
+LBLRTM, RRTM_LW, RRTM_SW AND MonoRTM.
+
+EARLIER VERSIONS HAD BEEN INCLUDED IN FASCOD3, MODTRAN AND LOWTRAN7
+
+------------------------------------------------------------------------------------
+
+PRINCIPAL REFERENCES FOR THE MT_CKD WATER VAPOR CONTINUUM MODEL: 
+
+Mlawer, M.J., D.C. Tobin, and S.A. Clough, A Revised Perspective on the Water Vapor 
+Continuum:  The MT_CKD Model, in preparation for JQSRT, 2003.
+
+
+PRINCIPAL REFERENCES FOR THE CKD WATER VAPOR CONTINUUM MODEL: 
+
+Tobin, D. C., F. A. Best, P. D. Brown, S. A. Clough, R. G.
+     Dedecker, R. G. Ellingson, R. K. Garcia, H. B. Howell, R. O.
+     Knuteson, E. J. Mlawer, H. E. Revercomb, J. F. Short, P. F.
+     van Delst, and V. P. Walden, Downwelling Spectral Radiance
+     Observations at the SHEBA Ice Station: Water Vapor Continuum
+     Measurements from 17-26 micrometer, J. Geophys. Res., 104,
+     2081-2092, 1999.
+
+Han, Y., J.A. Shaw, J.H.Churnside, P.D. Brown and S. A. Clough
+     (1997):  Infrared spectral Radiance measurements in the
+     tropical Pacific atmosphere, J. Geophys. Res.,102, 4,353-
+     4,356.
+
+Clough, S.A., The Water Vapor Continuum and its Role in Remote
+     Sensing, in Optical Remote Sensing of the Atmosphere, Vol. 2,
+     1995, OSA Technical Digest Series, (Optical Society of
+     America, Washington, DC, 1995), pp 76-78.
+
+Clough, S.A., F.X. Kneizys, E.P. Shettle, and G.P. Anderson (1986):
+     Atmospheric Radiance and Transmittance:  FASCOD2, Sixth Conference
+     on Atmospheric Radiation, Williamsburg, Virginia, May 1986.
+
+Clough, S.A., R.W. Davies and R.H. Tipping (1983):  The line shape for
+     collisionally broadened molecular transitions:  A quantum theory 
+     satisfying the fluctuation dissipation theorem, Spectral Line
+     Shapes, Editor:  K. Burnett, Walter de Gruyter, Berlin-New York
+     1983; also AFGL-TR-82-0281.
+
+Davies, R. W., R.H. Tipping, and S.A. Clough (1982):
+     Dipole autocorrelation function for molecular pressure broadening:
+     A quantum theory which satisfies the fluctuation dissipation
+     theorem.  Phys. Rev. A, 26, 3378.
+
+Clough, S.A., F.X. Kneizys, L.S. Rothman and W.O. Gallery (1981):
+     Atmospheric spectral transmittance and radiance:  FASCOD1B.
+     Proceedings of the SPIE 277, 152.
+  
+Clough, S.A., F.X. Kneizys, R. Davis, R. Gamache and R. Tipping:
+     Theoretical line shape for H2O vapor:  Application to the
+     continuum.  Atmospheric Water Vapor, edited by A. Deepak,
+     T.D. Wilkerson and L.H. Ruhnke, 52, Academic Press, New York,1980.
+
+
+_______________________________________________________________________Y
+
+ADDITIONAL REFERENCES RELEVENT TO THIS CONTINUUM MODEL INCLUDE:
+
+
+Boissoles, J., C. Boulet, R.H. Tipping, A. Brown and Q. Ma, 
+     Theoretical CAlculations of the Translation-Rotation 
+     Collision-Induced Absorption in N2-N2, O2-O2 and N2-O2 Pairs, 
+     J.Quant. Spec. Rad. Transfer, 82,505 (2003).
+
+Mate,B., C. Lugez, G.T. Fraser, and W.J. Lafferty (1999): 
+     Absolute Intensities for the O2 1.27 micron continuum absorption,
+     J. Geophys. Res., 104, 30,585-30,590. 
+
+Clerbaux, C., P. Chazette, J. Hadji-Lazaro, G. Megie,J.-F. Moeller
+     and S. A. Clough, Remote sensing of CO, CH4 and O3 using a
+     space-borne nadir-viewing interferometer, J. Geophys. Res.,
+     103, 18,999-19,013, 1998.
+
+Mlawer, E.J., S.A. Clough, P.D. Brown, T.M. Stephens, J.C. Landry,
+     A. Goldman and F.J. Murcray (1998):  Observed Atmospheric
+     Collision Induced Absorption in Near Infrared Oxygen Bands.
+     J. Geophys. Res., 103, 3859-3863.
+
+Moncet, J.-L. and S.A. Clough (1997): Accelerated monochromatic
+     radiative transfer for scattering atmospheres: Application of
+     a new model to spectral radiance observations. J. Geophys.
+     Res., 102, 21,853-21,866.
+
+Mlawer,E.J., S.A. Clough.,P.D. Brown, Stephen, Landry, Goldman, & Murcray (1997):
+     Observed  Atmospheric  Collision Induced Absorption in Near Infrared
+     Oxygen Bands,  Journal of Geophysical Research.
+
+Mlawer, E.J., S.J. Taubman, P.D. Brown, M.J. Iacono and S.A.
+     Clough (1997):  Radiative Transfer for Inhomogeneous
+     Atmospheres:  RRTM, a Validated correlated-k model for the
+     longwave. J. Geophys. Res.,102, 16,663-16,682.
+
+Lafferty, W.J., A.M. Solodov,A. Weber, W.B. Olson and J._M. Hartmann (1996):
+     Infrared collision-induced absorption by N2 near 4.3 microns
+     for atmospheric applications: Measurements and emprirical modeling, 
+     Appl. Optics, 35, 5911-5917'
+
+Iacono, M.J. and S.A. Clough  (1996): Application of infrared
+     interferometer spectrometer clear sky spectral radiance to
+     investigation of climate variability. J. Geophys. Res., 101,
+     29,439-29,460.
+
+Clough, S.A. and M.J. Iacono (1995): Line-by-Line Calculations of
+     Atmospheric Fluxes and Cooling Rates II: Application to
+     Carbon Dioxide, Ozone, Methane, Nitrous Oxide, and the
+     Halocarbons. J. Geophys. Res., 100, 16,519-16,535.
+
+Clough, S.A., C.P. Rinsland and P.D. Brown (1995):  Retrieval of
+     tropospheric ozone from simulations of nadir spectral
+     radiances as observed from space, J. Geophys. Res., 100,
+     16,579-16,593.
+
+Clough, S.A., M.J. Iacono, J.-L. Moncet (1992): Line-by-Line
+     Calculation of Atmospheric Fluxes and Cooling Rates:
+     Application to Water Vapor.  J. Geophys. Res., 97, 15761-
+     15785.
+
+Greenblatt,G.D., J.J. Orlando, J.B. Burkholder, and A.R. Ravishabkara (1990):
+     Absorption Coefficients of Oxygen Between 330 and 1140 nm,   
+     J. Geophys. Res., 95, 18577-18582. 
+
+Kneizys, F.X., E.P.Shettle, L.W. Abreu, J.H. Chetwynd, Jr., G.P. 
+     Anderson, W.O. Gallery, J.E.A. Selby, S.A. Clough and R.W. Fenn
+     (1988):  USERS GUIDE TO LOWTRAN7, AFGL-TR-88-0177.
+  
+Borysow, A, and L. Frommhold, "Collision-induced rototranslational absorption 
+     spectra of N2-N2 pairs for temperatures from 50 to 300 K", 
+     The Astrophysical Journal, 311, 1043-1057, 1986.
+
+Kneizys, F.X., E.P.Shettle, W.O. Gallery, J.H. Chetwynd, Jr.,
+     L.W. Abreu,  J.E.A. Selby, S.A. Clough and R.W. Fenn (1983):
+     ATMOSPHERIC TRANSMITTANCE/RADIANCE: COMPUTER CODE LOWTRAN6",
+     AFGL-TR-83-0187. 
+
+************************************************************************
+
+                                                                                                                        
+0  *****  CONTINUA mt_ckd_1.2                                                                         
+                                                                                                                        
+                                       H2O   SELF  (T)      0 - 20000 CM-1    mt_ckd_1.0                (December 2002) 
+                                             AIR   (T)      0 - 20000 CM-1    mt_ckd_1.1                  (August 2004) 
+                                       CO2   AIR            0 - 20000 CM-1    co2 nu2 increased * 7         (July 2002) 
+                                       N2    SELF           0 -   350 CM-1    BORYSOW FROMMHOLD                         
+                                             AIR         2085 -  2670 CM-1                                 (March 1998) 
+                                       O2    AIR   (T)   1340 -  1850 CM-1                                 (March 1998) 
+                                             O2/N2       7550 -  8486 CM-1                              (February 2000) 
+                                             AIR         9100 - 11000 CM-1                                (August 1999) 
+                                             O2         15000 - 29870 CM-1                                  (May  2000) 
+                                             O2/N2      36000 -  >>>> CM-1    HERZBERG                                  
+                                       O3    AIR         9170 - 24565 CM-1    CHAPPUIS / WULF                           
+                                                   (T)  27370 - 40800 CM-1    HARTLEY HUGGINS                           
+                                                        40800 - 54000 CM-1    HARTLEY HUGGINS                           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                    H2O SELF HAS BEEN REDUCED IN THE 800-1200 CM-1 REGION                                 (01 SEPT 1985)
+                    03       TEMPERATURE DEPENDENCE HAS BEEN CORRECTED                                     (01 MAY 1987)
+                    02       (1390-1760) HAS BEEN REDUCED (FACTOR = 0.78)                                (07 MARCH 1990)
+ ckd_1.0     2.2    H2O SELF HAS BEEN REDUCED IN THE 1100-1500 CM-1 REGION                               (01 APRIL 1993)
+     "              H2O FOREIGN HAS BEEN REDUCED AT ~1300 CM-1 AND IN ALL THE WINDOW REGIONS             (01 APRIL 1993)
+ ckd_2.1     3.3    H2O SELF HAS BEEN MODIFIED IN THE 700-1500 CM-1 REGION                                 (01 MAY 1994)
+     "              H2O FOREIGN HAS BEEN MODIFIED IN THE ENTIRE 1200-2200 CM-1 SPECTRAL RANGE              (01 MAY 1994)
+ ckd_2.2     3.7    H2O SELF HAS BEEN INCREASED 30% IN THE MICROWAVE REGION                                (09 FEB 1996)
+     "              N2 COLLISION INDUCED PURE ROTATION BAND ADDED                                          (09 FEB 1996)
+     "              O3 CHAPPUIS CHANGED TO VALUES FROM MODTRAN3                                            (09 FEB 1996)
+ ckd_2.2.2   3.12   INTERPOLATION EFFECTS BETWEEN HARTLEY HUGGINS DATA AROUND 40800 CM-1                  (18 SEPT 1996)
+ ckd_2.4.1   5.12   O2 COLLISION INDUCED FUNDAMENTAL BAND (1340-1850 CM-1) CHANGED TO THIBAULT ET AL., 1996 (MARCH 1998)
+     "              N2 COLLISION INDUCED FUNDAMENTAL BAND (2085-2670 CM-1) CHANGED TO LAFFERTY ET AL., 1996 (MARCH 1998)
+     "              H2O FOREIGN HAS BEEN MODIFIED IN THE 0-800 CM-1 AND 1200-2200 CM-1 RANGE BASED ON      (04 JUN 1999)
+     "                       AERI-ER FROM SHEBA, TOBIN ET AL., 1998                                                     
+     "              H2O SELF HAS BEEN INCREASED IN THE 0-200 CM-1 REGION                                   (04 JUN 1999)
+     "              O2 COLLISION INDUCED BAND HAS BEEN ADDED  (9100 - 11000 CM-1); MLAWER ET AL. 1998      (16 AUG 1999)
+     "              O2 COLLISION INDUCED BAND HAS BEEN CHANGED (7555 - 8486 CM-1); MATE ET AL. 1999        (10 FEB 2000)
+ ckd_2.4.2   5.17   O2 COLLISION INDUCED BANDS HAVE BEEN ADDED (15000 - 29870 CM-1); GREENBLATT ET AL. 1990 (8 MAY 2000)
+     "              The nu2 CO2 increased by a factor of 7: based on U  Wisc. AFWEX and AERI_xr at ARM NSA   (July 2002)
+ mt_ckd_1.00 1.00   *********   The entire water vapor continuum has been revised   *********            (December 2002)
+     "              *********   This continuum is based on a new line shape/collision induced formulation, mt_ckd  *** )
+ mt_ckd_1.1         H2O foreign modified in the 250-550 cm-1 region; results now consistent with ckd_2.4.1 (August 2004)
+ mt_ckd_1.2         Collision induced nitrogen 0-350 cm-1 increased (~1.35):  Boissoles at al., 2003    (September 2004)
+                    ----------------------------------------------------------------------------------------------------
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
