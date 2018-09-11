@@ -13,7 +13,7 @@ References:
 1) Download to your own computer.
 2) Manually compile the MTCKD model:
 - cd $PyRADS/DATA/MT_CKD_continuum/cntnm.H2O_N2/build
-- (on a Mac) gmake -f make_cntnm osxGNUdbl
+- (on a Mac) make -f make_cntnm osxGNUdbl
 3) Run test script
 - cd $PyRADS/Test01
 - python compute_olr_h2o.01.100RH.py
