@@ -6,6 +6,7 @@ For Earth-like atmospheres, PyRADS currently uses HITRAN 2016 line lists (http:/
 Currently, PyRADS is only valid for longwave calculations (no scattering).
 
 References:
+
 (1) Koll & Cronin, 2018. In press.
 
 # Installation
@@ -19,4 +20,5 @@ References:
 
 # Requirements
 Python 2.x with numpy and scipy.
-For the MTCKD continuum model: gmake and gfortran
+
+For the MTCKD continuum model: gmake and gfortran.
