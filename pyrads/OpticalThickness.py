@@ -61,7 +61,7 @@ def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.):
                                        cutoff_option="fixed",remove_plinth=True)
 
         kappaCO2 = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
-                                       "H2O",press=pres,press_self=0., \
+                                       "CO2",press=pres,press_self=0., \
                                        temp=temp,broadening="air", lineWid=25., \
                                        cutoff_option="fixed",remove_plinth=False)
 
