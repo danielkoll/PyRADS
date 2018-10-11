@@ -1,8 +1,3 @@
-### THIS SCRIPT IS BASED ON PyTran, WHICH IS PART OF THE COURSEWARE IN
-###  Pierrehumbert, 2010, Principles of Planetary Climate
-###
-### MODIFIED BY dkoll
-
 #--------------------------------------------------------
 #Description:
 #Utilities for reading the HITRAN line database, synthesizing
@@ -78,16 +73,19 @@
 #
 #---------------------------------------------------------
 
+#Path to the datasets
+
+#datapath = '/home/dkoll/Python/PyRADS/DATA/HITRAN_DATA/'    # ADJUST THIS!
+datapath = '/Users/dkoll/Dropbox/New_RadiationLimit_for_H2_Atmospheres/PyRADS/DATA/HITRAN_DATA/'    # ADJUST THIS!
+
+#Path to the hitran by-molecule database
+# #hitranPath = datapath+'HITRAN2016/ThermalOnly_0-5000cm.AllIsotopes/'
+# #hitranPath = datapath+'HITRAN2016/ThermalOnly_0-5000cm.MainIsotopesOnly/'
+hitranPath = datapath+'HITRAN2016/Full_0-60000cm.MainIsotopesOnly/'    # FOR SW calculations!
+
 import string,math
 from ClimateUtilities import *
 import phys
-import os
-
-#Path to the datasets
-datapath = '/'.join( os.path.abspath(__file__).split('/')[:-2] ) + '/DATA/HITRAN_DATA/'
-
-#Path to the hitran by-molecule database
-hitranPath = datapath+'HITRAN2016/ThermalOnly_0-5000cm.MainIsotopesOnly/'
 
 #------------Constants and file data------------
 #
@@ -347,27 +345,29 @@ def computeAbsorption_fixedCutoff(waveGrid,getGamma,p,T,dWave,numWidths=25.,remo
     return absGrid
 
 
-#Function to  to compute absorption coefficient
-#vs. pressure at a given wavenumber wavenum. and temperature T. Line parameter data
-#is global and must be read in first.
-def absPath(p,wavenum,T=296.,numWidths = 1000.):
-        width = .1*p/1.e5
-        i1 = numpy.searchsorted(waveList,wavenum-numWidths*width)-1
-        i2 = numpy.searchsorted(waveList,wavenum+numWidths*width)+1
-        i1 = max(i1,0)
-        i2 = min(i2,len(waveList))
-        lineCenters = waveList[i1:i2]
-        lineStrengths = sList[i1:i2]
-        lineWidths = gamList[i1:i2]
-        TExpList1 = TExpList[i1:i2]
-        ElowList1 = ElowList[i1:i2]
-        gam = lineWidths*(p/1.013e5)*(296./T)**TExpList1
-        #Temperature scaling of line strength
-        Tfact = numpy.exp(-100.*(phys.h*phys.c/phys.k)*ElowList1*(1/T-1/296.))
-        S = lineStrengths*(T/296.)**TExpList1*Tfact
-        terms = S*gam/ \
-          (math.pi*( (lineCenters-wavenum)**2 + gam**2))
-        return sum(terms)
+# #Function to  to compute absorption coefficient
+# #vs. pressure at a given wavenumber wavenum. and temperature T. Line parameter data
+# #is global and must be read in first.
+# def absPath(p,wavenum,T=296.,numWidths = 1000.):
+#         width = .1*p/1.e5
+#         i1 = numpy.searchsorted(waveList,wavenum-numWidths*width)-1
+#         i2 = numpy.searchsorted(waveList,wavenum+numWidths*width)+1
+#         i1 = max(i1,0)
+#         i2 = min(i2,len(waveList))
+#         lineCenters = waveList[i1:i2]
+#         lineStrengths = sList[i1:i2]
+#         lineWidths = gamList[i1:i2]
+#         TExpList1 = TExpList[i1:i2]
+#         ElowList1 = ElowList[i1:i2]
+#         gam = lineWidths*(p/1.013e5)*(296./T)**TExpList1
+#         #Temperature scaling of line strength
+#         Tfact = numpy.exp(-100.*(phys.h*phys.c/phys.k)*ElowList1*(1/T-1/296.))
+#         S = lineStrengths*(T/296.)**TExpList1*Tfact
+#         terms = S*gam/ \
+#           (math.pi*( (lineCenters-wavenum)**2 + gam**2))
+#         return sum(terms)
+
+
 
 #Function to compute a list of values of the transmission
 #at a given frequency, for each of a set of pressures.
@@ -478,8 +478,14 @@ def smooth(wAvg,data):
 #        it is important to undo this weighting, so that the
 #        correct abundance weighting for the actual mixture of
 #        interest can be computed. 
-def loadSpectralLines(molName):
-    global waveList,sList,gamList,gamAirList,gamSelfList,ElowList,TExpList,Q
+#**DKOLL:
+#        modified to speed up long line lists.
+#        skip lines until you're close to your spectral region of interest.
+#        then lead lines
+#        if you're outside region, break, skip rest of file.
+#        for this to work, make use of fact that line lists are ordered
+def loadSpectralLines(molName,minWave=None,maxWave=None):
+    global waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,Q
     molNum = molecules[molName][0]
     Q = molecules[molName][2] #Partition function for this molecule
     if molNum < 10:
@@ -493,11 +499,23 @@ def loadSpectralLines(molName):
     f = open(file)
     waveList = []
     sList = []
-    gamList =[]
     gamAirList = []
     gamSelfList = []
     TExpList = []
     ElowList = [] #Lower state energy
+    #
+    # DKOLL: only consider lines close to
+    #        frequencies for which we actually want kappa.
+    #        to be conservative, say 1000 cm-1.
+    #        ->that might imply cutting off some far tails!
+    if minWave is not None:
+        minWave = minWave - 1000.
+    else:
+        minWave = 0.
+    if maxWave is not None:
+        maxWave = maxWave + 1000.
+    else:
+        maxWave = 1e10 # something big
     #
     count = 0
     line = f.readline()
@@ -505,39 +523,42 @@ def loadSpectralLines(molName):
         count += 1
         isoIndex = string.atoi(get(line,iso))
         n = string.atof(get(line,waveNum))
-        S = string.atof(get(line,lineStrength))
-        El = string.atof(get(line,Elow))
-        #Convert line strength to (m**2/kg)(cm**-1) units
-        #The cm**-1 unit is there because we still use cm**-1
-        #as the unit of wavenumber, in accord with standard
-        #practice for IR
-        #
-        #**ToDo: Put in correct molecular weight for the
-        #        isotope in question.  
-        S = .1*(phys.N_avogadro/molecules[molName][1])*S
-        gamAir = string.atof(get(line,airWidth))
-        gamSelf = string.atof(get(line,selfWidth))
-        TemperatureExponent = string.atof(get(line,TExp))
-        if  isoIndex == 1:
-            waveList.append(n)
-            sList.append(S)
-            #gamList.append(gamSelf) #Put in switch to control this
-            gamAirList.append(gamAir)
-            gamSelfList.append(gamSelf)
-            ElowList.append(El)
-            TExpList.append(TemperatureExponent)
-        #Read the next line, if there is one
-        line = f.readline()
+        #DKOLL:
+        if n<minWave:
+            pass   # skip to next line
+        elif n>maxWave:
+            break  # ignore rest of file
+        else:
+            S = string.atof(get(line,lineStrength))
+            El = string.atof(get(line,Elow))
+            #Convert line strength to (m**2/kg)(cm**-1) units
+            #The cm**-1 unit is there because we still use cm**-1
+            #as the unit of wavenumber, in accord with standard
+            #practice for IR
+            #
+            #**ToDo: Put in correct molecular weight for the
+            #        isotope in question.  
+            S = .1*(phys.N_avogadro/molecules[molName][1])*S
+            gamAir = string.atof(get(line,airWidth))
+            gamSelf = string.atof(get(line,selfWidth))
+            TemperatureExponent = string.atof(get(line,TExp))
+            if  isoIndex == 1:
+                waveList.append(n)
+                sList.append(S)
+                gamAirList.append(gamAir)
+                gamSelfList.append(gamSelf)
+                ElowList.append(El)
+                TExpList.append(TemperatureExponent)
+            #Read the next line, if there is one
+            line = f.readline()
     #Convert the lists to numpy/Numeric arrays
     waveList = numpy.array(waveList)
     sList = numpy.array(sList)
-    #gamList = numpy.array(gamList)
     gamAirList = numpy.array(gamAirList)
     gamSelfList = numpy.array(gamSelfList)
     ElowList =  numpy.array(ElowList)
     TExpList = numpy.array(TExpList)
     f.close()
-
 
 
 #====================================================================
@@ -567,7 +588,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
     p = float(press) # DKOLL: make sure (p,T) are floats!
     T = float(temp)
 
-    loadSpectralLines(molName)
+    loadSpectralLines(molName,minWave=wave0,maxWave=wave1)
     
 #-->Decide whether you want to compute air-broadened
 #or self-broadened absorption. The plots of self/air
