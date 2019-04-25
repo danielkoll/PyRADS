@@ -27,6 +27,10 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - cd $PyRADS/Test02.runaway
 - python compute_olr_h2o.01.100RH.py
 
+
+NOTE: test scripts are optimized to run relatively quickly, not to produce accurate values. For research-grade science or to compare PyRADS output with other radiation codes, vertical and spectral resolution should be increased. For some reference values, see Methods in Koll & Cronin (2018).
+
+
 # Requirements
 Python 2.x with numpy and scipy.
 
