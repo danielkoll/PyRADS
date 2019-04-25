@@ -80,8 +80,8 @@ from __future__ import division, print_function, absolute_import
 #---------------------------------------------------------
 
 import string,math
-from ClimateUtilities import *
-import phys
+from .ClimateUtilities import *
+from . import phys
 import os
 
 #Path to the datasets
