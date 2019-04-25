@@ -1,0 +1,9 @@
+# Compiled python modules.
+*.pyc
+# Compiled fortran objects, modules and extensions
+*.o
+*.mod
+*.so
+*.so.dSYM
+
+*.DS_Store
