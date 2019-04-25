@@ -231,8 +231,8 @@ class Curve:
 
 
 
-from string import atof
-
+#from string import atof
+#  deprecated in Python 2.7, gone in Python 3... just use float()
 
 # Scans a list of lines, locates data lines
 # and size, splits of column headers and
@@ -268,7 +268,8 @@ def scan(buff,inHeader=None,delimiter = None):
         line = buff[startDataLine].split(delimiter)
     #
     try:
-        atof(line[0])
+        #atof(line[0])
+        float(line[0])
     except:
         header = line
     if len(header) == 0:
@@ -291,7 +292,8 @@ def scan(buff,inHeader=None,delimiter = None):
             items = line.split(delimiter)
         try:
          for i in range(len(varlist)):
-            varlist[i].append(atof(items[i]))
+            #varlist[i].append(atof(items[i]))
+            varlist[i].append(float(items[i]))
         except:
             print( items)
     vardict = {}

@@ -522,16 +522,20 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
     line = f.readline()
     while len(line)>0:
         count += 1
-        isoIndex = string.atoi(get(line,iso))
-        n = string.atof(get(line,waveNum))
+        #isoIndex = string.atoi(get(line,iso))
+        isoIndex = int(get(line,iso))
+        #n = string.atof(get(line,waveNum))
+        n = float(get(line,waveNum))
         #DKOLL:
         if n<minWave:
             pass   # skip to next line
         elif n>maxWave:
             break  # ignore rest of file
         else:
-            S = string.atof(get(line,lineStrength))
-            El = string.atof(get(line,Elow))
+            #S = string.atof(get(line,lineStrength))
+            S = float(get(line,lineStrength))
+            #El = string.atof(get(line,Elow))
+            El = float(get(line,Elow))
             #Convert line strength to (m**2/kg)(cm**-1) units
             #The cm**-1 unit is there because we still use cm**-1
             #as the unit of wavenumber, in accord with standard
@@ -540,9 +544,12 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
             #**ToDo: Put in correct molecular weight for the
             #        isotope in question.
             S = .1*(phys.N_avogadro/molecules[molName][1])*S
-            gamAir = string.atof(get(line,airWidth))
-            gamSelf = string.atof(get(line,selfWidth))
-            TemperatureExponent = string.atof(get(line,TExp))
+            #gamAir = string.atof(get(line,airWidth))
+            gamAir = float(get(line,airWidth))
+            #gamSelf = string.atof(get(line,selfWidth))
+            gamSelf = float(get(line,selfWidth))
+            #TemperatureExponent = string.atof(get(line,TExp))
+            TemperatureExponent = float(get(line,TExp))
             if  isoIndex == 1:
                 waveList.append(n)
                 sList.append(S)
