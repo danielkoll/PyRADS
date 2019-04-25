@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 ### THIS SCRIPT IS TAKEN FROM THE COURSEWARE OF
 ###  Pierrehumbert, 2010, Principles of Planetary Climate
 ###
@@ -32,7 +33,7 @@ from ClimateUtilities import * #To get the math methods routines
 
 #-------------Basic physical constants-------------------
 #
-#The following five are the most accurate 1986 values 
+#The following five are the most accurate 1986 values
 #
 h = 6.626075540e-34    #Planck's constant
 c = 2.99792458e8       #Speed of light
@@ -71,7 +72,7 @@ Rstar = 1000.*k*N_avogadro   #Universal gas constant
 #
 #
 #ToDo: *Add more documentation and help features
-#       
+#
 #      *provide dictionary of properties and units.
 #      *Add some methods or lists that make it easier
 #       for the user to create new gas objects and insert
@@ -120,7 +121,7 @@ class gas:
             to specific heat at constant volume. (Generally
             stated at 298K and 1bar)
         MolecularWeight: Molecular weight of the dominant isotope
-        name: Name of the gas 
+        name: Name of the gas
         formula: Chemical formula (e.g. 'CH4')
 
         L_vaporization: Default value to use for latent heat of
@@ -135,7 +136,7 @@ class gas:
             method is called
         Rcp: The adiabatic exponent R/cp. Computed from other
             data when the update() method is called.
-        
+
     '''
 
     #The __repr__ method allows us to print out
@@ -162,7 +163,7 @@ class gas:
         self.cp = None
         self.gamma = None
         self.MolecularWeight = None
-        self.name = None 
+        self.name = None
         self.formula = None
         #
         #Default values for latent heat and liquid
@@ -206,8 +207,8 @@ H2O.rho_solid = 9.170000e+02
 H2O.cp = 1.847000e+03
 H2O.gamma = 1.331000e+00
 H2O.MolecularWeight = 1.800000e+01
-H2O.name = 'Water' 
-H2O.formula = 'H2O' 
+H2O.name = 'Water'
+H2O.formula = 'H2O'
 H2O.L_vaporization=2.493000e+06
 H2O.rho_liquid=9.998700e+02
 #------------------------
@@ -226,8 +227,8 @@ CH4.rho_solid = 5.093000e+02
 CH4.cp = 2.195000e+03
 CH4.gamma = 1.305000e+00
 CH4.MolecularWeight = 1.600000e+01
-CH4.name = 'Methane' 
-CH4.formula = 'CH4' 
+CH4.name = 'Methane'
+CH4.formula = 'CH4'
 CH4.L_vaporization=5.360000e+05
 CH4.rho_liquid=4.502000e+02
 #------------------------
@@ -246,8 +247,8 @@ CO2.rho_solid = 1.562000e+03
 CO2.cp = 8.200000e+02
 CO2.gamma = 1.294000e+00
 CO2.MolecularWeight = 4.400000e+01
-CO2.name = 'Carbon Dioxide' 
-CO2.formula = 'CO2' 
+CO2.name = 'Carbon Dioxide'
+CO2.formula = 'CO2'
 CO2.L_vaporization=3.970000e+05
 CO2.rho_liquid=1.110000e+03
 #------------------------
@@ -266,8 +267,8 @@ N2.rho_solid = 1.026000e+03
 N2.cp = 1.037000e+03
 N2.gamma = 1.403000e+00
 N2.MolecularWeight = 2.800000e+01
-N2.name = 'Nitrogen' 
-N2.formula = 'N2' 
+N2.name = 'Nitrogen'
+N2.formula = 'N2'
 N2.L_vaporization=2.180000e+05
 N2.rho_liquid=8.086000e+02
 #------------------------
@@ -286,8 +287,8 @@ O2.rho_solid = 1.351000e+03
 O2.cp = 9.160000e+02
 O2.gamma = 1.393000e+00
 O2.MolecularWeight = 3.200000e+01
-O2.name = 'Oxygen' 
-O2.formula = 'O2' 
+O2.name = 'Oxygen'
+O2.formula = 'O2'
 O2.L_vaporization=2.420000e+05
 O2.rho_liquid=1.307000e+03
 #------------------------
@@ -306,8 +307,8 @@ H2.rho_solid = 8.800000e+01
 H2.cp = 1.423000e+04
 H2.gamma = 1.384000e+00
 H2.MolecularWeight = 2.000000e+00
-H2.name = 'Hydrogen' 
-H2.formula = 'H2' 
+H2.name = 'Hydrogen'
+H2.formula = 'H2'
 H2.L_vaporization=4.540000e+05
 H2.rho_liquid=7.097000e+01
 #------------------------
@@ -326,8 +327,8 @@ He.rho_solid = 2.000000e+02
 He.cp = 5.196000e+03
 He.gamma = 1.664000e+00
 He.MolecularWeight = 4.000000e+00
-He.name = 'Helium' 
-He.formula = 'He' 
+He.name = 'Helium'
+He.formula = 'He'
 He.L_vaporization=2.030000e+04
 He.rho_liquid=1.249600e+02
 #------------------------
@@ -346,8 +347,8 @@ NH3.rho_solid = 8.226000e+02
 NH3.cp = 2.060000e+03
 NH3.gamma = 1.309000e+00
 NH3.MolecularWeight = 1.700000e+01
-NH3.name = 'Ammonia' 
-NH3.formula = 'NH3' 
+NH3.name = 'Ammonia'
+NH3.formula = 'NH3'
 NH3.L_vaporization=1.658000e+06
 NH3.rho_liquid=7.342000e+02
 #------------------------
@@ -455,7 +456,7 @@ def satvpg(T):
 #the simplified form of Clausius-Clapeyron assuming the perfect
 #gas law and constant latent heat
 def satvps(T,T0,e0,MolecularWeight,LatentHeat):
-  Rv=Rstar/MolecularWeight 
+  Rv=Rstar/MolecularWeight
   return e0*math.exp(-(LatentHeat/Rv)*(1./T - 1./T0))
 
 #This example shows how to simplify the use of the simplified
@@ -654,7 +655,3 @@ class MoistAdiabat:
             mc = Numeric.array([mc1(pp) for pp in pgrid])
             q = Numeric.array([q1(pp) for pp in pgrid])
             return Numeric.array(pgrid),T, mc, q
-
-
-
-

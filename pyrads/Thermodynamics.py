@@ -1,6 +1,7 @@
 '''
 Thermodynamic helper functions.
 '''
+from __future__ import division, print_function
 import numpy as np
 
 
@@ -23,7 +24,7 @@ def get_qsat(T,p_tot,params):
 # ---
 # Input: T and *total* pressure. (Partial dry pressure is inferred.)
 # Output: specific humidity.
-# 
+#
 # --> Valid for any value of RH! If RH=1, reduces to get_qsat.
 def get_q(T,p_tot,params,RH=1.):
     eps = params.R/params.Rv
@@ -36,14 +37,14 @@ def get_q(T,p_tot,params,RH=1.):
 # ---
 # Input: T and *total* pressure.
 # Output: mass mixing ratio r := rho_H2O / rho_dry = m_H2O*p_H2O / (m_dry * p_dry)
-# 
+#
 # NOTE: this is NOT the volume/number mixing ratio !
 #       for that simply use n_H2O/n_dry = p_H2O/p_dry
 def get_rsat(T,p_tot,params):
     eps = params.R/params.Rv
     e_sat = params.esat(T)
     p_dry = p_tot - e_sat
-    r_sat = eps * e_sat / p_dry    
+    r_sat = eps * e_sat / p_dry
     return r_sat
 
 
@@ -55,7 +56,7 @@ def get_rsat(T,p_tot,params):
 #         molar concentration   eta := n_i / (n_i + n_rest)
 # Output: abundance of gas, by mass
 #         mass mixing ratio   q := rho_i / (rho_i + rho_rest)
-# 
+#
 # where rho_i is (mass) density, and n_i is number density.
 #
 # Formula is (see, e.g., PoPC p.86-87):
@@ -72,4 +73,3 @@ def convert_molar_to_mass_ratio(molar_i,R_i,R_air):
     R_mean = 1./(molar_i/R_i + molar_air/R_air)
     q_i = molar_i * R_mean/R_i
     return q_i
-

@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 import numpy as np
 import phys
 
@@ -29,7 +30,7 @@ def Planck_n(n,T,unit="cm^-1"):
         n = n*100.
         k = 100.
     else:
-        print "(Planck_n) Error: unit not recognized!"
+        print( "(Planck_n) Error: unit not recognized!")
     return k*phys.c*Planck_nu(n*phys.c,T)
 
 
@@ -57,7 +58,7 @@ def Tbrightness_n(n,I,unit="cm^-1"):
         n = n*100.
         k = 100.
     else:
-        print "(Planck_n) Error: unit not recognized!"
+        print( "(Planck_n) Error: unit not recognized!")
 
     return Tbrightness_nu(n*phys.c, I/(k*phys.c))
 
@@ -78,6 +79,6 @@ def dPlanckdT_n(n,T,unit="cm^-1"):
     elif unit=="cm^-1":
         k = 100.
     else:
-        print "(Planck_n) Error: unit not recognized!"
+        print( "(Planck_n) Error: unit not recognized!")
 
     return (k*phys.c) * dPlanckdT_nu( phys.c*n*k ,T)

@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 #----------Section 3: Plotting utilities-------------------------------
 #Graphics interface customized for MatPlotLib
 #     --------------->UNDER DEVELOPMENT
@@ -20,7 +21,7 @@
 #-----------------------------------------------------------------------
 
 
-#Try to import matplotlib plotting routines 
+#Try to import matplotlib plotting routines
 try:
     import matplotlib as mpl
     #Configure the backend so things work properly
@@ -36,9 +37,9 @@ try:
     #
     import pylab as pl
 except:
-    print 'matplotlib not found on your system'
-    print 'You can still run the courseware, but'
-    print 'will not be able to plot from inside Python'
+    print( 'matplotlib not found on your system')
+    print( 'You can still run the courseware, but')
+    print( 'will not be able to plot from inside Python')
 
 #A dummy class useful for passing parameters.
 #Just make an instance, then add new members
@@ -70,12 +71,12 @@ class plotObj:
         self.WorkstationResources = WorkstationResources
     #Deletes a plot window
     def delete(self):
-        print "In MatPlotLib just click the goaway button to dispose a plot"
+        print( "In MatPlotLib just click the goaway button to dispose a plot")
     def save(self,filename = 'plot'):
         #**ToDo: Can we implement non-interactive save in MPL?
-        print "In MatPlotLib save plots interactively using the file button"
-        print " in the plot window"
-        
+        print( "In MatPlotLib save plots interactively using the file button")
+        print( " in the plot window")
+
 #ToDo:
 #       *Implement use of missing data coding.
 #       *Provide some way to re-use window (e.g. by
@@ -96,7 +97,7 @@ class plotObj:
 
 #List of line colors and line styles to use
 lineColors = ['b','g','r','c','m','y','k']
-lineStyles = ['-','--','-.',':'] 
+lineStyles = ['-','--','-.',':']
 lineThickness = [2,3,4]
 plotSymbols = ['.','o','v','<','s','*','+','x']
 def plot(c):
@@ -120,7 +121,7 @@ def plot(c):
     #r.tiMainString = c.PlotTitle
     pl.title(c.PlotTitle)
     #Axis labels (ToDo: add defaults)
-    #X and Y axis labels    
+    #X and Y axis labels
     #r.tiXAxisString = c.Xlabel
     #r.tiYAxisString = c.Ylabel
     if c.switchXY:
@@ -129,7 +130,7 @@ def plot(c):
     else:
         pl.xlabel(c.Xlabel)
         pl.ylabel(c.Ylabel)
-        
+
     #  Legends, for multicurve plot
     legends = []
     for id in c.listVariables():
@@ -154,7 +155,7 @@ def plot(c):
                 #r.xyMarkLineModes.append('Markers')
                 color = lineColors[count%len(lineColors)]
                 symbol = plotSymbols[count%len(plotSymbols)]
-                formatList.append(color+symbol) 
+                formatList.append(color+symbol)
             else:
                 color = lineColors[count%len(lineColors)]
                 style = lineStyles[count%len(lineStyles)]
@@ -226,7 +227,7 @@ def contour(A,**kwargs):
 ##        r = kwargs['resource']
 ##    else:
 ##        r = Dummy()
-##    
+##
 ##    rw = Dummy()
 ##    #Set the color map
 ##    if 'colors' in kwargs.keys():
@@ -237,4 +238,4 @@ def contour(A,**kwargs):
 ##            rw.wkColorMap = kwargs['colors']
 ##    else:
 ##        #Default rainbow color table
-##        rw.wkColorMap = "temp1" 
+##        rw.wkColorMap = "temp1"

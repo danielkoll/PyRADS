@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 from copy import copy               # to copy lists of objects...
 
 # ==================================================================================
@@ -18,5 +19,3 @@ def get_objects_from_list(obj_list,attribute,value,comparefn=None):
     if len(x)==1:
         x = x[0]
     return x
-
-

@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 import numpy as np
 import phys
 
@@ -40,7 +41,7 @@ def get_H2OSelfContinuum(wave,T,pH2O,extrapolate=True):
         mask = wave>3000.
         kappa1 = np.exp(-6.0055 + -0.0021363*(3000.-2500.) + 6.4723e-07*(3000.-2500.)**2 +
                                -1.493e-08*(3000.-2500.)**3 + 2.5621e-11*(3000.-2500.)**4 +
-                               7.328e-14*(3000.-2500.)**5)    
+                               7.328e-14*(3000.-2500.)**5)
         kappaC[mask] = kappa1
 
         # interpolate in between:
@@ -58,6 +59,3 @@ def get_H2OSelfContinuum(wave,T,pH2O,extrapolate=True):
     # Temperature dependence & rescale for partial pressure:
     Tfac = (296./T)**4.25
     return kappaC *Tfac *(pH2O/1e4)
-
-
-
