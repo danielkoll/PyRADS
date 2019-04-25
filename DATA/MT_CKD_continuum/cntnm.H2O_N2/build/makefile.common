@@ -48,6 +48,7 @@ default:
 	echo 'osxABSOFTdbl : OSX using Absoft PRO Fortran and double precision'
 	echo 'osxABSOFTsgl : OSX using Absoft PRO Fortran and single precision'
 	echo 'osxGNUdbl    : OSX using GNU Fortran and double precision'
+	echo 'osxGNUCONDAdbl : OSX using GNU Fortran installed with conda and double precision'
 	echo 'osxGNUsgl    : OSX using GNU Fortran and single precision'
 	echo 'osxIBMdbl    : OSX using IBM XL Fortran and double precision'
 	echo 'osxIBMsgl    : OSX using IBM XL Fortran and single precision'
@@ -55,8 +56,8 @@ default:
 	echo 'mingwGNUsgl  : Window unix shell environment using gfortran and single precision'
 	echo 'aixIBMsgl    : AIX using IBM XL Fortran and double precision'
 	echo 'aixIBMsgl    : AIX using IBM XL Fortran and single precision'
-	echo 
-	
+	echo
+
 
 ###############################
 # Load line
@@ -126,14 +127,14 @@ makedir :
 clean:
 	-rm -rf *.o *.mod
 	-rm -rf $(PRODUCT)_*_$(VERSION)_*.obj
-	
+
 cleanall:
 	-rm -rf *.o *.mod
 	-rm -r *_*_$(VERSION)_*.obj
 
 cleanmods:
 	-rm -rf *.mod
-	
+
 #*************************************************************
 # SUN/SOLARIS OPERATING SYSTEM
 #*************************************************************
@@ -207,7 +208,7 @@ linuxPGIsgl:
 	FC=pgf90 \
 	FCFLAG="-fast" \
 	UTIL_FILE=util_linux_pgi.f90
-	
+
 ##############################################################
 # linux using gfortran and double precision
 ##############################################################
@@ -312,7 +313,7 @@ osxABSOFTdbl:
 # OSX using Absoft PRO Fortran and single precision
 ##############################################################
 
-osxABSOFTsgl:	
+osxABSOFTsgl:
 	${MAKE} -f ${MAKEFILE} all P_TYPE=sgl FC_TYPE=intel \
 	PLTFRM=OS_X \
 	FC=absoft \
@@ -328,6 +329,17 @@ osxGNUdbl:
 	PLTFRM=OS_X  \
 	FC=gfortran \
 	FCFLAG=" -fdefault-integer-8 -fdefault-real-8 -frecord-marker=4" \
+	UTIL_FILE=util_gfortran.f90
+
+##############################################################
+# OSX using GNU Fortran (with conda-installed gfortran_osx-64) and double precision
+##############################################################
+
+osxGNUCONDAdbl:
+	${MAKE} -f ${MAKEFILE} all P_TYPE=dbl FC_TYPE=gnu \
+	PLTFRM=OS_X  \
+	FC=gfortran \
+	FCFLAG=" -fdefault-integer-8 -fdefault-real-8 -frecord-marker=4 -Wl,-rpath,${CONDA_PREFIX}/lib" \
 	UTIL_FILE=util_gfortran.f90
 
 ##############################################################
