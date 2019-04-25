@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 #----------Section 3: Plotting utilities-------------------------------
 #This is a dummy graphics routine, to import if a graphics driver
 #is not found. It is the fallback import if the import of ClimateGraphics

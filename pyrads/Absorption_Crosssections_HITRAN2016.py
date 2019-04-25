@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 ### THIS SCRIPT IS BASED ON PyTran, WHICH IS PART OF THE COURSEWARE IN
 ###  Pierrehumbert, 2010, Principles of Planetary Climate
 ###

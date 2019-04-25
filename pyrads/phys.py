@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 ### THIS SCRIPT IS TAKEN FROM THE COURSEWARE OF
 ###  Pierrehumbert, 2010, Principles of Planetary Climate
 ###
@@ -6,7 +6,7 @@ from __future__ import division, print_function
 ###  https://geosci.uchicago.edu/~rtp1/PrinciplesPlanetaryClimate/Courseware/coursewarePortal.html
 
 import math
-from ClimateUtilities import * #To get the math methods routines
+from .ClimateUtilities import * #To get the math methods routines
 #
 #All units are mks units
 #

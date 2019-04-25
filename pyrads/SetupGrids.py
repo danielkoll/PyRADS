@@ -3,10 +3,10 @@
 This script setups the vertical and spectral grids.
 ***********************************************************
 '''
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 import numpy as np
-import VerticalStructure
-import Thermodynamics
+from . import VerticalStructure
+from . import Thermodynamics
 
 # ---
 ## Helpers

@@ -4,14 +4,14 @@ This script computes absorption coefficients and
 optical thicknesses.
 ***********************************************************
 '''
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 import numpy as np
-from Absorption_Crosssections_HITRAN2016 import getKappa_HITRAN
-import Absorption_Continuum_MTCKD
-from Absorption_Continuum_MTCKD import get_H2OContinuum
+from .Absorption_Crosssections_HITRAN2016 import getKappa_HITRAN
+from . import Absorption_Continuum_MTCKD
+from .Absorption_Continuum_MTCKD import get_H2OContinuum
 from scipy.integrate import cumtrapz
 
-from Thermodynamics import convert_molar_to_mass_ratio
+from .Thermodynamics import convert_molar_to_mass_ratio
 
 # ---
 ##

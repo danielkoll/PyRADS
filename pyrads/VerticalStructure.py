@@ -4,12 +4,12 @@ This script provides a number of functions to compute
 vertical temperature,humidity structure.
 ***********************************************************
 '''
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 
 import numpy as np
 import scipy
 from scipy.optimize import fsolve  # [!]
-from Thermodynamics import get_qsat,get_q,get_satvps
+from .Thermodynamics import get_qsat,get_q,get_satvps
 
 
 # Returns T-p, q-p profiles, assuming a moist adiabat.

@@ -1,8 +1,8 @@
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 import numpy as np
 import phys
 
-from Planck import Planck_n
+from .Planck import Planck_n
 
 # Here: choose integrator
 from scipy.integrate import trapz as numint

@@ -1,4 +1,4 @@
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 ### THIS SCRIPT IS TAKEN FROM THE COURSEWARE OF
 ###  Pierrehumbert, 2010, Principles of Planetary Climate
 ###
@@ -77,7 +77,7 @@ except:
 #------------------------------------------------------
 
 try:
-    from ClimateGraphicsMPL import * #Try importing MatPlotLib
+    from .ClimateGraphicsMPL import * #Try importing MatPlotLib
 #    from ClimateGraphics import * #Try importing Ngl driver
 except:
     # If Ngl not found, try importing the graphics interface
@@ -86,7 +86,7 @@ except:
     #or just do "from ClimateGraphicsMPL import *" after you
     #import ClimateUtilities .
     try:
-        from ClimateGraphicsMPL import * #Try importing MatPlotLib
+        from .ClimateGraphicsMPL import * #Try importing MatPlotLib
     except:
         print( "  ")
         print( "Graphics not implemented.")
@@ -95,7 +95,7 @@ except:
         print( "object c into a text file using c.dump(<FILENAME>)")
         print( "and then plot the data using the graphics program")
         print( "of your choice.")
-        from DummyGraphics import *
+        from .DummyGraphics import *
 
 #Section 1: -----Data handling utilities-------------------------------
 

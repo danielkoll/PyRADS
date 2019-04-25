@@ -1,13 +1,14 @@
-import Absorption_Continuum
-import Absorption_Continuum_MTCKD
-import Absorption_Crosssections_HITRAN2016
-import ClimateUtilities
-import Get_Fluxes
-import OpticalThickness
-import Planck
-import SetupGrids
-import Thermodynamics
-import VerticalStructure
-import object_helpers
-import phys
+from __future__ import absolute_import
 
+from . import Absorption_Continuum
+from . import Absorption_Continuum_MTCKD
+from . import Absorption_Crosssections_HITRAN2016
+from . import ClimateUtilities
+from . import Get_Fluxes
+from . import OpticalThickness
+from . import Planck
+from . import SetupGrids
+from . import Thermodynamics
+from . import VerticalStructure
+from . import object_helpers
+from . import phys
