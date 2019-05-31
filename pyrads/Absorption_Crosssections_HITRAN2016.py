@@ -1,3 +1,4 @@
+from __future__ import division, print_function, absolute_import
 ### THIS SCRIPT IS BASED ON PyTran, WHICH IS PART OF THE COURSEWARE IN
 ###  Pierrehumbert, 2010, Principles of Planetary Climate
 ###
@@ -61,7 +62,7 @@
 #atmosphere). If you want to modify the code to look at minor
 #isotopologues, it is important to note that the HITRAN database
 #downweights the line strengths for each isotopologue according
-#to relative abundance in Earth's atmosphere. 
+#to relative abundance in Earth's atmosphere.
 #--------------------------------------------------------
 #
 #Change Log
@@ -79,8 +80,8 @@
 #---------------------------------------------------------
 
 import string,math
-from ClimateUtilities import *
-import phys
+from .ClimateUtilities import *
+from . import phys
 import os
 
 #Path to the datasets
@@ -97,7 +98,7 @@ Sum = 0
 fieldStart = [0]
 for length in fieldLengths:
     Sum += length
-    fieldStart.append(Sum)   
+    fieldStart.append(Sum)
 iso = 1
 waveNum = 2
 lineStrength = 3
@@ -116,7 +117,7 @@ def QGenericLin(T): #Approx. for linear molecules like CO2
 def QGenericNonLin(T): #Approx for nonlinear molecules like H2O
     return T**1.5
 #**ToDo: Provide actual partition functions for CO2, H2O and CH4
-    
+
 #Molecule numbers and molecular weights
 #Add more entries here if you want to do other
 #molecules in the HITRAN database. These entries are
@@ -164,7 +165,7 @@ def makeEsumTable(waveStart,waveEnd,Delta=50.,N=21):
 		c.addCurve(hist,header2)
 		wave += Delta
 	return c
-                
+
 #Note: Log quartile values are exponentiated for plotting
 def plotLogQuartiles(bandWidth):
     waveList = []
@@ -182,8 +183,8 @@ def plotLogQuartiles(bandWidth):
     c.addCurve([math.exp(stat[3]) for stat in statsList],'q75')
     c.addCurve([math.exp(stat[4]) for stat in statsList],'Max')
     return c
-    
-    
+
+
 
 def logQuartiles(waveRange):
     i1 = numpy.searchsorted(waveGrid,waveRange[0])
@@ -200,7 +201,7 @@ def quartiles(data):
     else:
         return [-1.e20,-1.e20,-1.e20,-1.e20,-1.e20]
 
-    
+
 #Utility to compute histogram of absorption data
 #Returns bins, histogram and cumulative PDF
 def histo(data,nBins=10,binMin=None,binMax=None):
@@ -209,7 +210,7 @@ def histo(data,nBins=10,binMin=None,binMax=None):
         binMid = numpy.zeros(nBins-1,numpy.Float)
         hist = numpy.zeros(nBins-1,numpy.Float)
         hist[0] = 1.
-        binMid[0] = -1.e30 
+        binMid[0] = -1.e30
         cumHist = numpy.zeros(nBins-1,numpy.Float)+1.
         return binMid,hist,cumHist
     #
@@ -274,7 +275,7 @@ def computeAbsorption(waveGrid,getGamma,p,T,dWave,numWidths = 1000.):
         #for temperature T, but it can become important on the low frequency
         #side, and is easy to incorporate.
         Tfact1 = (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/T))/ \
-              (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/296.))   
+              (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/296.))
         #The following has the incorrect algebraic prefactor used in
         #  the original version of PyTran (see Errata/Updates document)
         #S = sList[i]*(T/296.)**TExpList[i]*Tfact
@@ -317,7 +318,7 @@ def computeAbsorption_fixedCutoff(waveGrid,getGamma,p,T,dWave,numWidths=25.,remo
         #for temperature T, but it can become important on the low frequency
         #side, and is easy to incorporate.
         Tfact1 = (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/T))/ \
-              (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/296.))   
+              (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/296.))
         #The following has the incorrect algebraic prefactor used in
         #  the original version of PyTran (see Errata/Updates document)
         #S = sList[i]*(T/296.)**TExpList[i]*Tfact
@@ -413,7 +414,7 @@ def plotP(n,T=296.,numWidths = 1000.):
 	c.addCurve(absp)
 	c.YlogAxis = c.XlogAxis = True
 	return c
-        
+
 #Gets the fieldNum'th data item from a Hitran2004 record
 def get(line,fieldNum):
     return line[fieldStart[fieldNum]:fieldStart[fieldNum]+fieldLengths[fieldNum]]
@@ -460,13 +461,13 @@ def OLRspec(pathMax):
     B = numpy.array([Planck(w,TT) for w in waveGrid])
     OLR += B*trans
     return OLR
-    
+
 #Computes a function smoothed over specified wavenumber band
 def smooth(wAvg,data):
     navg = int(wAvg/dWave)
     nmax = len(waveGrid)-navg
     return [numpy.average(data[i:i+navg]) for i in range(0,nmax,navg)]
-    
+
 
 
 #Open the Hitran file for the molecule in question,
@@ -477,7 +478,7 @@ def smooth(wAvg,data):
 #        in Earth's atmosphere. When loading minor isotopologues,
 #        it is important to undo this weighting, so that the
 #        correct abundance weighting for the actual mixture of
-#        interest can be computed. 
+#        interest can be computed.
 #**DKOLL:
 #        modified to speed up long line lists.
 #        skip lines until you're close to your spectral region of interest.
@@ -521,27 +522,34 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
     line = f.readline()
     while len(line)>0:
         count += 1
-        isoIndex = string.atoi(get(line,iso))
-        n = string.atof(get(line,waveNum))
+        #isoIndex = string.atoi(get(line,iso))
+        isoIndex = int(get(line,iso))
+        #n = string.atof(get(line,waveNum))
+        n = float(get(line,waveNum))
         #DKOLL:
         if n<minWave:
             pass   # skip to next line
         elif n>maxWave:
             break  # ignore rest of file
         else:
-            S = string.atof(get(line,lineStrength))
-            El = string.atof(get(line,Elow))
+            #S = string.atof(get(line,lineStrength))
+            S = float(get(line,lineStrength))
+            #El = string.atof(get(line,Elow))
+            El = float(get(line,Elow))
             #Convert line strength to (m**2/kg)(cm**-1) units
             #The cm**-1 unit is there because we still use cm**-1
             #as the unit of wavenumber, in accord with standard
             #practice for IR
             #
             #**ToDo: Put in correct molecular weight for the
-            #        isotope in question.  
+            #        isotope in question.
             S = .1*(phys.N_avogadro/molecules[molName][1])*S
-            gamAir = string.atof(get(line,airWidth))
-            gamSelf = string.atof(get(line,selfWidth))
-            TemperatureExponent = string.atof(get(line,TExp))
+            #gamAir = string.atof(get(line,airWidth))
+            gamAir = float(get(line,airWidth))
+            #gamSelf = string.atof(get(line,selfWidth))
+            gamSelf = float(get(line,selfWidth))
+            #TemperatureExponent = string.atof(get(line,TExp))
+            TemperatureExponent = float(get(line,TExp))
             if  isoIndex == 1:
                 waveList.append(n)
                 sList.append(S)
@@ -589,7 +597,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
     T = float(temp)
 
     loadSpectralLines(molName,minWave=wave0,maxWave=wave1)
-    
+
 #-->Decide whether you want to compute air-broadened
 #or self-broadened absorption. The plots of self/air
 #ratio in the book were done by running this script for
@@ -614,7 +622,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
 #This is a very crude implementation of the far-tail cutoff.
 #I have been using 1000 widths as my standard value.
     nWidths = lineWid
-    
+
     if cutoff_option=="relative":
         absGrid = computeAbsorption(waveGrid,getGamma,p,T,dWave,nWidths)
     elif cutoff_option=="fixed":

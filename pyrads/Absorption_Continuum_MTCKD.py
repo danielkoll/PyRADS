@@ -1,6 +1,7 @@
+from __future__ import division, print_function, absolute_import
 import os
 import numpy
-import phys
+from . import phys
 import time
 
 '''
@@ -12,7 +13,7 @@ Fixed the scaling in 'get_H2OContinuum'.
 Tau computed with these coefficients now matches tau natively computed by MTCKD.
 
 UPDATE: (29.01.2018)
-To allow these scripts to run parallel within the same dir, 
+To allow these scripts to run parallel within the same dir,
 create all input/output files within a dummy directory.
 For a unique directory label, use time.time() stamp.
 '''
@@ -33,7 +34,7 @@ mtckd_exe_default = mtckd_exe_H2O_N2      # !
 
 
 ### -----------------------------------
-### Given wavenumber, (T,p,q), return total specific absorption crosssection for 
+### Given wavenumber, (T,p,q), return total specific absorption crosssection for
 ### continuum. Include both H2O self-continuum plus N2-H2O continuum.
 ###
 ### INPUT: wave -> VECTOR;      p,T,q -> SCALARS!
@@ -61,10 +62,10 @@ def get_H2OContinuum(wave,T,p_tot,p_H2O,exe_file=None):
 
     kappa_self0 = cross_self * 0.1 * phys.N_avogadro/phys.H2O.MolecularWeight
     kappa_foreign0 = cross_foreign * 0.1 * phys.N_avogadro/phys.H2O.MolecularWeight  # here: also m_H2O
-    
-    # Combine coefficients. Apply rescaling here. 
+
+    # Combine coefficients. Apply rescaling here.
     kappa0 = kappa_self0 * (p_H2O/p_tot) + kappa_foreign0 * ((p_tot-p_H2O)/p_tot)  # self + foreign broadening
-        
+
     # Now rescale for p,T
     #    (test passed: without this scaling, can't match MTCKD's optical depths at T>>296K. with, it can.)
     kappa0 = kappa0 * (p_tot/1.013e5)*(296./T)
@@ -76,7 +77,7 @@ def get_H2OContinuum(wave,T,p_tot,p_H2O,exe_file=None):
 
 
 ### -----------------------------------
-### Given wavenumber, (T,p,q), return total optical depth for 
+### Given wavenumber, (T,p,q), return total optical depth for
 ### continuum. Include both H2O self-continuum plus N2-H2O continuum.
 ###
 ### INPUT: wave -> VECTOR;      p,T,q -> SCALARS!
@@ -116,7 +117,7 @@ def get_coefficients(p,T,pathlength,vmr_h2o,exe_file=None,clean_files=True):
 
     #
     stamp = time.time()
-    tmp_dir = "./tmp_mtckd_%.5f" % stamp   # create a unique tmp dir    
+    tmp_dir = "./tmp_mtckd_%.5f" % stamp   # create a unique tmp dir
     os.mkdir( tmp_dir )
     os.chdir( tmp_dir )
     #print "current working directory: ",os.getcwd()
@@ -130,7 +131,7 @@ def get_coefficients(p,T,pathlength,vmr_h2o,exe_file=None,clean_files=True):
     #
     if clean_files:
         os.remove( tmp_dir + '/INPUT')       # clean up tmp files
-        os.remove( tmp_dir + '/WATER.COEF')  
+        os.remove( tmp_dir + '/WATER.COEF')
         os.remove( tmp_dir + '/CNTNM.OPTDPT')
         os.rmdir( tmp_dir )
 
@@ -150,7 +151,7 @@ def get_tau(p,T,pathlength,vmr_h2o,exe_file=None,clean_files=True):
 
     #
     stamp = time.time()
-    tmp_dir = "./tmp_mtckd_%.5f" % stamp   # create a unique tmp dir    
+    tmp_dir = "./tmp_mtckd_%.5f" % stamp   # create a unique tmp dir
     os.mkdir( tmp_dir )
     os.chdir( tmp_dir )
 
@@ -162,8 +163,8 @@ def get_tau(p,T,pathlength,vmr_h2o,exe_file=None,clean_files=True):
 
     if clean_files:
         os.remove( tmp_dir + '/INPUT')       # clean up tmp files
-        os.remove( tmp_dir + '/WATER.COEF')  
-        os.remove( tmp_dir + '/CNTNM.OPTDPT')        
+        os.remove( tmp_dir + '/WATER.COEF')
+        os.remove( tmp_dir + '/CNTNM.OPTDPT')
         os.rmdir( tmp_dir )
 
     return wave,tau
@@ -175,7 +176,7 @@ def get_tau(p,T,pathlength,vmr_h2o,exe_file=None,clean_files=True):
 ### -----------------------------------
 ### Run MTCKD for given input parameters
 ###
-### Note: mt_ckd needs [p] = mb, [path] = cm. 
+### Note: mt_ckd needs [p] = mb, [path] = cm.
 ###
 
 def run_mtckd(p,T,pathlength,vmr_h2o,exe_file,suppress_stdout=True):
@@ -192,14 +193,14 @@ def run_mtckd(p,T,pathlength,vmr_h2o,exe_file,suppress_stdout=True):
     if suppress_stdout:
         os.system( exe_file + " < " + input_file + " > /dev/null")
     else:
-        print "================================================"
-        print "===   RUN MT_CKD CONTINUUM                   ==="
-        print "==="
+        print( "================================================")
+        print( "===   RUN MT_CKD CONTINUUM                   ===")
+        print( "===")
         os.system( exe_file + " < " + input_file )
-        print "==="
-        print "==="
-        print "================================================"
-    
+        print( "===")
+        print( "===")
+        print( "================================================")
+
 
 ### -----------------------------------
 ### Given output txt file, cut off header and extract data
@@ -233,9 +234,7 @@ def read_mtckd_output(file):
         body = txt.split("MOLECULAR AMOUNTS (MOL/CM**2) BY LAYER \n")[-1]
 
         data = numpy.genfromtxt(body.split('\n'), skip_header=6)  # careful about cutoffs!
-        
+
         wave = data[:,0]
         tau = data[:,1]
         return wave,tau
-
-

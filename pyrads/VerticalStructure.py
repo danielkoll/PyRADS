@@ -4,11 +4,12 @@ This script provides a number of functions to compute
 vertical temperature,humidity structure.
 ***********************************************************
 '''
+from __future__ import division, print_function, absolute_import
 
 import numpy as np
 import scipy
 from scipy.optimize import fsolve  # [!]
-from Thermodynamics import get_qsat,get_q,get_satvps
+from .Thermodynamics import get_qsat,get_q,get_satvps
 
 
 # Returns T-p, q-p profiles, assuming a moist adiabat.
@@ -34,18 +35,18 @@ def get_Tq_moist(p,Ts,ps,params,RH=1.,Tstrat=None):
     if Tstrat is not None and np.any(T_adiabat < Tstrat):
         # caution: only implements stratosphere if T<Tstrat anywhere
         # this can fail at crappy vertical resolution!
-        
+
         mask = T_adiabat < Tstrat
         T = T_adiabat
         T[mask] = Tstrat
-            
+
         # pick highest pressure level in strat, assume q is uniform at that value
         q = q_adiabat
         q[mask] = q_adiabat[p==(p[mask].max())]
     else:
         T = T_adiabat
         q = q_adiabat
-        
+
     return T,q
 
 
@@ -64,7 +65,7 @@ def get_TofP_MoistAdiabat(p,Ts,ps_in,params):
 
     #ps = ps_in + esat(Ts)  # here: assume ps_in is dry pressure only
     ps = ps_in
-    
+
     # (integrate dlogT/dlog(p/ps)): based on eqn. 12 in Ding & Pierrehumbert (2016)
     def slope(logT,logpps):
         T = np.exp(logT)
@@ -96,7 +97,7 @@ def get_TofP_MoistAdiabat(p,Ts,ps_in,params):
         return np.exp(logInt[1:])  # don't return initial value...
     else:
         return np.exp(logInt[-1])  # don't return initial value...
-    
+
 
 # analytical dry adiabat, T=T(p)
 def get_TofP_DryAdiabat(p,Ts,ps,params):
@@ -105,6 +106,3 @@ def get_TofP_DryAdiabat(p,Ts,ps,params):
 # analytical single-component moist adiabat, T=T(p)
 def get_TofP_SingleCompAdiabat(p,params):
     return params.satvap_T0 / (1. - params.Rv*params.satvap_T0/params.Lvap * np.log(p/params.satvap_e0) )
-
-
-

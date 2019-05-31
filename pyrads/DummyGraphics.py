@@ -1,3 +1,4 @@
+from __future__ import division, print_function, absolute_import
 #----------Section 3: Plotting utilities-------------------------------
 #This is a dummy graphics routine, to import if a graphics driver
 #is not found. It is the fallback import if the import of ClimateGraphics
@@ -41,10 +42,10 @@ class plotObj:
     def save(self,filename = 'plot'):
         #Saves a plot to a file
         pass
-        
+
 #Makes a line pot from a Curve object
 def plot(c):
-    print "Plotting not implemented"
+    print( "Plotting not implemented")
     #Set axis options according to information
     #in the curve object c.
     #
@@ -61,9 +62,9 @@ def plot(c):
     #
     #Set thePlot title
     #c.PlotTitle:
-    #   String containing the plot title     
+    #   String containing the plot title
     #Axis labels
-    #X and Y axis labels   
+    #X and Y axis labels
     #c.Xlabel:
     #   String containing the X axis label
     #c.Ylabel:
@@ -73,7 +74,7 @@ def plot(c):
     if c.switchXY:
         pass
         #If True, exchang the axes
-        
+
     #  Legends, for multicurve plot
     legends = []
     for id in c.listVariables():
@@ -130,7 +131,7 @@ def plot(c):
 # the y scale to be the array (or list) lon, we would call
 # contour as contour(A,x=lat,y=lon).
 def contour(A,**kwargs):
-    print "Plotting not implemented"
+    print( "Plotting not implemented")
     #The following allows an expert user to pass
     # options directly to the plotter.
     if 'resource' in kwargs.keys():
@@ -141,13 +142,13 @@ def contour(A,**kwargs):
     r.cnFillOn = True #Use color fill
 
     if 'x' in kwargs.keys():
-        #Set the X array for the contour plot        
+        #Set the X array for the contour plot
         XArray = kwargs['x']
     if 'y' in kwargs.keys():
         #Set the Y array for the contour plot
         YArray = kwargs['y']
     #
-    # Now create the plot    
+    # Now create the plot
     rw = Dummy()
     #Set the color map
     if 'colors' in kwargs.keys():
@@ -159,7 +160,7 @@ def contour(A,**kwargs):
             rw.wkColorMap = kwargs['colors']
     else:
         #Default rainbow color table
-        rw.wkColorMap = "temp1" 
+        rw.wkColorMap = "temp1"
 
     #Open/initialize a plot window
     w = None

@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 import numpy as np
 import sys,os
 
@@ -36,12 +37,12 @@ params.RH = 1.             # relative humidity
 # ---
 ## setup resolution (vertical,spectral)
 
-#N_press = 60       # 
-N_press = 15       # 
+#N_press = 60       #
+N_press = 15       #
 wavenr_min = 0.1   # [cm^-1]
 wavenr_max = 3500. #
-#dwavenr = 0.01     # 
-dwavenr = 0.1     # 
+#dwavenr = 0.01     #
+dwavenr = 0.1     #
 
 Tstrat = 150.      # stratospheric temperature
 
@@ -55,7 +56,7 @@ filename = 'output.compute_olr_h2o.01.100RH.txt'
 saveOutput = True  # Save the output/plots? [Yes/No]
 if saveOutput:
     OUTDIR = "./"
-    print "Saving output to ",OUTDIR
+    print( "Saving output to ",OUTDIR)
     if not os.path.isdir( OUTDIR ):
         os.makedirs( OUTDIR )
 
@@ -75,11 +76,11 @@ if saveOutput:
     f.write("\n")
 
     f.close()
-        
+
     ## main loop here
     for Ts in Ts_grid:
         f = open(OUTDIR+filename,'a')
-        
+
         # setup grid:
         g = pyrads.SetupGrids.make_grid( Ts,Tstrat,N_press,wavenr_min,wavenr_max,dwavenr,params, RH=params.RH )
 
@@ -108,11 +109,10 @@ if saveOutput:
         # Simple feedback model (like above, without normalization)
         weight = np.pi* pyrads.Planck.dPlanckdT_n( g.n,Ts )
         lam = trapz( np.exp(-g.tau[-1,:]) * weight,x=g.n )
-        
-        print "\n",Ts,g.ps/1e5,olr,surf, "\n"
-        
+
+        print( "\n",Ts,g.ps/1e5,olr,surf, "\n")
+
         f.write("%.2f,\t%.4f,\t%.8f,\t%.8f,\t%.8f,\t%.8f" % (Ts,g.ps/1e5,olr,surf,trans,lam) )
         f.write("\n")
 
         f.close()
-    

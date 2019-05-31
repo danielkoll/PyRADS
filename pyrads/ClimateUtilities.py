@@ -1,3 +1,4 @@
+from __future__ import division, print_function, absolute_import
 ### THIS SCRIPT IS TAKEN FROM THE COURSEWARE OF
 ###  Pierrehumbert, 2010, Principles of Planetary Climate
 ###
@@ -55,12 +56,12 @@ except:
     try:
         import Numeric
         import Numeric as numpy    #For frontwards compatibility
-        numpy.float = numpy.Float  #For frontwards compatibility 
-        print "numpy not found. Using Numeric instead"
-        print "Everything should still work, but consider upgrading to numpy"
+        numpy.float = numpy.Float  #For frontwards compatibility
+        print( "numpy not found. Using Numeric instead")
+        print( "Everything should still work, but consider upgrading to numpy")
     except:
-        print "Neither numpy nor Numeric found."
-        print "Please install numpy (preferred) or Numeric."
+        print( "Neither numpy nor Numeric found.")
+        print( "Please install numpy (preferred) or Numeric.")
 
 #-----------------------------------------------------
 #Import graphics utilities
@@ -76,7 +77,7 @@ except:
 #------------------------------------------------------
 
 try:
-    from ClimateGraphicsMPL import * #Try importing MatPlotLib
+    from .ClimateGraphicsMPL import * #Try importing MatPlotLib
 #    from ClimateGraphics import * #Try importing Ngl driver
 except:
     # If Ngl not found, try importing the graphics interface
@@ -85,16 +86,16 @@ except:
     #or just do "from ClimateGraphicsMPL import *" after you
     #import ClimateUtilities .
     try:
-        from ClimateGraphicsMPL import * #Try importing MatPlotLib
+        from .ClimateGraphicsMPL import * #Try importing MatPlotLib
     except:
-        print "  "
-        print "Graphics not implemented."
-        print "Plot routines will not produce graphs."
-        print "Instead, you can save results from a Curve"
-        print "object c into a text file using c.dump(<FILENAME>)"
-        print "and then plot the data using the graphics program"
-        print "of your choice."
-        from DummyGraphics import *
+        print( "  ")
+        print( "Graphics not implemented.")
+        print( "Plot routines will not produce graphs.")
+        print( "Instead, you can save results from a Curve")
+        print( "object c into a text file using c.dump(<FILENAME>)")
+        print( "and then plot the data using the graphics program")
+        print( "of your choice.")
+        from .DummyGraphics import *
 
 #Section 1: -----Data handling utilities-------------------------------
 
@@ -135,7 +136,7 @@ class Curve:
     #
     #Install a new curve in the data set, optionally with a variable name and label
     #Any 1D indexable object can be installed here:a Numeric array, a Masked Array,
-    #a Masked Variable (as in cdms) or an ordinary list. 
+    #a Masked Variable (as in cdms) or an ordinary list.
     def addCurve(self,data,id = '',label = ''):
         self.NumCurves += 1
         if len(id) == 0:
@@ -158,7 +159,7 @@ class Curve:
         try:
             n = len(data[:])
         except:
-            print "Object on RHS is not indexable"
+            print( "Object on RHS is not indexable")
             return None
         #Transform data from list to a Numeric array here
         if type(data) == type([]):
@@ -167,7 +168,7 @@ class Curve:
             self.data[id] = data
         else:
             self.addCurve(data,id)
-    
+
     #Method to return Numeric abcissa array for plotting.
     def X(self):
         #Use of cross section lets us get data from any indexed object
@@ -176,12 +177,12 @@ class Curve:
         #explicitly for a _data component.
         #
         #This method is used mainly for generating arrays used in plotting,
-        #and should be streamlined at some point. 
+        #and should be streamlined at some point.
         temp = self.data[self.Xid][:]
         if hasattr(temp,'_data'):
             temp = temp._data[:]
         return Numeric.array(temp,Numeric.Float)
-    
+
     #Method to return Numeric ordinate array for plotting
     def Y(self):
         #Use of cross section lets us get data from any indexed object
@@ -225,13 +226,13 @@ class Curve:
         for dataName in dataList:
             c.addCurve(self[dataName],dataName)
         return c
-            
-            
-            
-            
-    
-from string import atof
 
+
+
+
+
+#from string import atof
+#  deprecated in Python 2.7, gone in Python 3... just use float()
 
 # Scans a list of lines, locates data lines
 # and size, splits of column headers and
@@ -255,7 +256,7 @@ def scan(buff,inHeader=None,delimiter = None):
     buff = clean(buff)
     #
     #Now look for patterns that indicate data lines
-    #     
+    #
     startDataLine,endDataLine = findData(buff)
     # Found number of items. Now read in the data
     #
@@ -267,7 +268,8 @@ def scan(buff,inHeader=None,delimiter = None):
         line = buff[startDataLine].split(delimiter)
     #
     try:
-        atof(line[0])
+        #atof(line[0])
+        float(line[0])
     except:
         header = line
     if len(header) == 0:
@@ -290,9 +292,10 @@ def scan(buff,inHeader=None,delimiter = None):
             items = line.split(delimiter)
         try:
          for i in range(len(varlist)):
-            varlist[i].append(atof(items[i]))
+            #varlist[i].append(atof(items[i]))
+            varlist[i].append(float(items[i]))
         except:
-            print items
+            print( items)
     vardict = {}
     for name in header:
         vardict[name] = varlist[header.index(name)]
@@ -344,9 +347,9 @@ def readTable(filename,inHeader = None,delimiter = None):
         c.addCurve(data[key],key)
     return c
 
-    
-    
-    
+
+
+
 #==============================================
 #---Section 2: Math utilities-------------------------------------------
 #==============================================
@@ -366,7 +369,7 @@ class Dummy:
 def polint(xa,ya,x):
     n = len(xa)
     if not (len(xa) == len(ya)):
-            print "Input x and y arrays must be same length"
+            print( "Input x and y arrays must be same length")
             return "Error"
         #Set up auxiliary arrays
     c = Numeric.zeros(n,Numeric.Float)
@@ -382,7 +385,7 @@ def polint(xa,ya,x):
                 diff = difft
                 ns = i
     y=ya[ns]
-    for m in range(1,n): 
+    for m in range(1,n):
         for i in range(n-m):
             ho=xa[i]-x
             hp=xa[i+m]-x
@@ -395,7 +398,7 @@ def polint(xa,ya,x):
             ns -= 1
             dy = d[ns]
         y += dy
-        #You can also return dy as an error estimate. Here 
+        #You can also return dy as an error estimate. Here
         #to keep things simple, we just return y.
     return y
 
@@ -514,7 +517,7 @@ class romberg:
             self.f = f1
         else:
             name = f.func_name
-            print 'Error: %s has wrong number of arguments'%name
+            print( 'Error: %s has wrong number of arguments'%name)
         #-----------------------------------------------------
         #
         #We keep lists of all our results, for doing
@@ -547,14 +550,14 @@ class romberg:
         self.nList.append(self.nstart)
         self.integralList.append(self.trap.integral)
         #
-        #Refine initial evaluation until 
+        #Refine initial evaluation until
         oldval = self.refine()
         newval = self.refine()
         while abs(oldval-newval)>tolerance:
             oldval,newval = newval,self.refine()
         return newval
-        
-        
+
+
 
 #-------Runge-Kutta ODE integrator
 #**ToDo:
@@ -582,13 +585,13 @@ class romberg:
 #
 #      * Make the integrator object callable. The call can return
 #        a list of results for all the intermediate steps, or optionally
-#        just the final value.  
+#        just the final value.
 class integrator:
   '''
   Runge-Kutta integrator, for 1D or multidimensional problems
-  
+
   Usage:
-  
+
   First you define a function that returns the
   derivative(s), given the independent and dependent
   variables as arguments. The independent variable (think
@@ -600,15 +603,15 @@ class integrator:
   arithmetic operations. It will not work with plain Python lists.
   The derivative function should return an array of derivatives, in
   the multidimensional case. The derivative function can have any name.
-  
+
   The derivative function can optionally have a third argument, to provide
   for passing parameters (e.g. the radius of the Earth) to the
   function.  The "parameter" argument, if present, can be any Python
   entity whatsoever. If you need to pass multiple constants, or
   even tables or functions, to your derivative function, you can
   stuff them all into a list or a Python object.
-  
-  
+
+
   Example:
   In the 1D case, to solve the equation
                   dz/dt = -a*t*t/(1.+z*z)
@@ -616,26 +619,26 @@ class integrator:
   independent variable, your derivative function would  be
     def g(t,z):
        return -a*t*t/(1.+z*z)
-  
+
   treating the parameter a as a global, or perhaps
     def g(t,z,params):
        return -params.a*t*t/(params.b+z*z)
-  
+
   while in a 2D case, your function might look like:
     def g(t,z):
       return Numeric.array([-z[1],z[0]])
-  
+
   or perhaps something like:
     def g(t,z):
       return t*Numeric.sin(z)
-  
+
   or even
     def g(t,z,params):
       return Numeric.matrixmultiply(params(t),z)
-      
+
   where params(t) in this case is a function returning
   a Numeric square matrix of the right dimension to multiply z.
-  
+
   BIG WARNING:  Note that all the examples which return a
   Numeric array return a NEW INSTANCE (i.e. copy) of an
   array.  If you try to set up a global array and re-use
@@ -658,39 +661,39 @@ class integrator:
       return Numeric.array([z[1],-z[0]])
   Try this one. It should work properly now. Note that any arithmetic
   performed on Numeric array objects returns a new instance of an Array
-  object. Hence, a function definition like 
+  object. Hence, a function definition like
     def g(t,z):
       return t*z*z+1.
   will work fine.
-  
-  Once you have defined the derivitave function, 
+
+  Once you have defined the derivitave function,
   you then proceed as follows.
-  
+
   First c reate an integrator instance:
     int_g = integrator(g,0.,start,.01)
-  
+
   where "0." in the argument list is the initial value
   for the independent variable, "start" is the initial
   value for the dependent variable, and ".01" is the
   step size. You then use the integrator as follows:
-  
+
     int_g.setParams(myParams)
     while int_g.x < 500:
-       print int_g.next()
-  
+       print( int_g.next())
+
   The call to setParams is optional. Just use it if your
   function makes use of a parameter object. The next() method
   accepts the integration increment (e.g. dx) as an optional
   argument. This is in case you want to change the step size,
   which you can do at any time.  The integrator continues
   using the most recent step size it knows.
-  
+
   Each call to int_g.next returns a list, the first of whose
   elements is the new value of the independent variable, and
   the second of whose elements is a scalar or array giving
   the value of the dependent variable(s) at the incremented
-  independent variable. 
-  
+  independent variable.
+
   '''
   def __init__(self, derivs,xstart,ystart,dx=None):
     self.derivsin = derivs
@@ -710,13 +713,13 @@ class integrator:
         self.derivs = derivs1
     else:
         name = derivs.func_name
-        print 'Error: %s has wrong number of arguments'%name
+        print('Error: %s has wrong number of arguments'%name)
     #
     #
     self.x = xstart
     #The next statement is a cheap trick to initialize
     #y with a copy of ystart, which works whether y is
-    #a regular scalar or a Numeric array.  
+    #a regular scalar or a Numeric array.
     self.y = 0.+ ystart
     self.dx = dx #Can instead be set with the first call to next()
     self.params = None
@@ -751,12 +754,12 @@ class integrator:
 
 
 
-#**ToDo:  
+#**ToDo:
 #
 #         Store the previous solution for use as the next guess(?)
 #
 #        Handle arithmetic exceptions in the iteration loop
-#  
+#
 class newtSolve:
     '''
     Newton method solver for function of 1 variable
@@ -781,7 +784,7 @@ class newtSolve:
     the derivative function by invoking solver.deriv(x)
     As for f, fp can be optionally defined with a parameter
     argument if you need it. The same parameter object is
-    passed to f and fp. 
+    passed to f and fp.
 
     Use solver.setParams(value) to set the parameter object
     Alternately, the parameter argument can be passed as
@@ -804,7 +807,7 @@ class newtSolve:
               return x*x - 1.
           roots = newtSolve(g)
           roots(2.)
-         
+
          Example 2, Function with parameters:
           def g(x,constants):
               return constants.a*x*x - constants.b
@@ -829,7 +832,7 @@ class newtSolve:
           roots = newtSolve(g)
           guesses = roots.scan([-2.,2.],100)
           for guess in guesses:
-              print roots(guess)
+              print( roots(guess))
     '''
     def __init__(self,f,fprime = None):
         self.fin = f
@@ -844,12 +847,12 @@ class newtSolve:
             self.f = f1
         else:
             name = f.func_name
-            print 'Error: %s has wrong number of arguments'%name
+            print( 'Error: %s has wrong number of arguments'%name)
         self.eps = 1.e-6
         def deriv(x,params):
             return (self.f(x+self.eps,params)- self.f(x-self.eps,params))/(2.*self.eps)
         if fprime == None:
-            self.deriv = deriv 
+            self.deriv = deriv
         else:
             #A derivative function was explicitly specified
             #Check if it has a parameter argument
@@ -863,7 +866,7 @@ class newtSolve:
                 self.deriv = fprime1
             else:
                 name = fprime.func_name
-                print 'Error: %s has wrong number of arguments'%name
+                print( 'Error: %s has wrong number of arguments'%name)
         self.tolerance = 1.e-6
         self.nmax = 100
         self.params = None
@@ -903,10 +906,3 @@ class newtSolve:
                 guessList.append(x)
             flast = fnow
         return guessList
-
-
-
-
-
-    
-         

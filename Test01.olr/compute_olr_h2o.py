@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 import numpy as np
 import sys,os
 
@@ -39,10 +40,10 @@ params.RH = 1.             # relative humidity
 N_press = 15       # for testing only!
 dwavenr = 0.1     #  for testing only!
 
-#N_press = 60       # 
+#N_press = 60       #
 wavenr_min = 0.1   # [cm^-1]
 wavenr_max = 3500. #
-#dwavenr = 0.01     # 
+#dwavenr = 0.01     #
 
 Tstrat = 150.      # stratospheric temperature
 
@@ -54,11 +55,11 @@ Ts = 300.
 ### -----------------------------------
 ## MAIN LOOP
 
-print "wavenr_min,wavenr_max,dwave [cm^-1] = %.4f,%.4f,%.4f" % (wavenr_min,wavenr_max,dwavenr)
-print "\n"
-print "N_press = %.1f" % N_press
-print "\n"
-print "Surface temperature = %.1f K" % Ts
+print( "wavenr_min,wavenr_max,dwave [cm^-1] = %.4f,%.4f,%.4f" % (wavenr_min,wavenr_max,dwavenr))
+print( "\n")
+print( "N_press = %.1f" % N_press)
+print( "\n")
+print( "Surface temperature = %.1f K" % Ts)
 
 
 # setup grid:
@@ -78,5 +79,4 @@ g.B = np.pi* pyrads.Planck.Planck_n( g.wave, T_2D )    # [press x wave]
 olr_spec = pyrads.Get_Fluxes.Fplus_alternative(0,g) # (spectrally resolved=irradiance)
 olr = simps(olr_spec,g.n)
 
-print "OLR = ",olr
-    
+print( "OLR = ",olr)

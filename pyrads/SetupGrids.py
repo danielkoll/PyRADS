@@ -3,9 +3,10 @@
 This script setups the vertical and spectral grids.
 ***********************************************************
 '''
+from __future__ import division, print_function, absolute_import
 import numpy as np
-import VerticalStructure
-import Thermodynamics
+from . import VerticalStructure
+from . import Thermodynamics
 
 # ---
 ## Helpers
@@ -32,7 +33,7 @@ def make_grid( Ts,Tstrat,N_press,wavenr_min,wavenr_max,dwavenr,params, \
     grid.n = np.arange( grid.n0, grid.n1, grid.dn )  # 1d
     grid.wave = np.tile( grid.n,(grid.Np,1) )         # 2d
     grid.Nn = len(grid.n)
-    
+
     # start filling arrays: compute p,T,q profiles
     #  -> careful about starting pressure!
     #  -> note: stratosphere only used for a full moist adiabat!
@@ -47,7 +48,6 @@ def make_grid( Ts,Tstrat,N_press,wavenr_min,wavenr_max,dwavenr,params, \
         grid.T = VerticalStructure.get_TofP_SingleCompAdiabat(grid.p,params)
         grid.q = grid.T * 0. + 1.
     else:
-        print "(setupgrids) error: adiabat choice=",adiabat, " -> not recognized!  *****"
+        print( "(setupgrids) error: adiabat choice=",adiabat, " -> not recognized!  *****")
 
     return grid
-

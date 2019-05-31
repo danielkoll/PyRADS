@@ -1,3 +1,4 @@
+from __future__ import division, print_function, absolute_import
 #----------Section 3: Plotting utilities-------------------------------
 #These need to be localized, for systems that don't support Ngl
 #
@@ -20,18 +21,18 @@
 
 #Note: On some older installations, Ngl has to
 #be imported as PyNGL instead of Ngl.  If there
-#is a trouble with the import, fiddle with that. 
+#is a trouble with the import, fiddle with that.
 try:
     import Ngl
 except:
     try:
         import PyNGL as Ngl
     except:
-        print "PyNGL was not found on your system."
-        print "You will not be able to use graphics functions."
-        print "PyNGL is available for Mac OSX,Linux and Windows/CygWin"
-        print "Alternately, modify the module ClimateGraphics.py"
-        print "to use some other graphics driver"
+        print( "PyNGL was not found on your system.")
+        print( "You will not be able to use graphics functions.")
+        print( "PyNGL is available for Mac OSX,Linux and Windows/CygWin")
+        print( "Alternately, modify the module ClimateGraphics.py")
+        print( "to use some other graphics driver")
         raise('Graphics Import Error')
 
 #A dummy class useful for passing parameters.
@@ -71,7 +72,7 @@ class plotObj:
         Ngl.draw(self.plot)
         Ngl.change_workstation(self.plot,self.workstation)
         Ngl.destroy(weps)
-        
+
 #ToDo:
 #       *Implement use of missing data coding.
 #       *Provide some way to re-use window (e.g. by
@@ -107,12 +108,12 @@ def plot(c):
     #Plot title
     r.tiMainString = c.PlotTitle
     #Axis labels (ToDo: add defaults)
-    #X and Y axis labels    
+    #X and Y axis labels
     r.tiXAxisString = c.Xlabel
     r.tiYAxisString = c.Ylabel
     if c.switchXY:
         r.tiXAxisString,r.tiYAxisString = r.tiYAxisString,r.tiXAxisString
-        
+
     #  Legends, for multicurve plot
     legends = []
     for id in c.listVariables():
@@ -179,7 +180,7 @@ def contour(A,**kwargs):
         r.sfYArray = kwargs['y']
     #
     # Now create the plot
-    
+
     rw = Dummy()
     #Set the color map
     if 'colors' in kwargs.keys():
@@ -190,8 +191,8 @@ def contour(A,**kwargs):
             rw.wkColorMap = kwargs['colors']
     else:
         #Default rainbow color table
-        rw.wkColorMap = "temp1" 
-    
+        rw.wkColorMap = "temp1"
+
     w = Ngl.open_wks('x11','Climate Workbook',rw)
     r.nglDraw = False
     r.nglFrame = False
