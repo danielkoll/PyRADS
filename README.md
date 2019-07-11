@@ -45,11 +45,11 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - cd $PyRADS/Test02.runaway
 - python compute_olr_h2o.01.100RH.py
 
-To compute SW fluxes in W/m2 for a given surface temperature (over a *limited* part of the solar spectrum) and save the resulting output to txt file:
+To compute SW fluxes in W/m2 for a given surface temperature (here, 300 K) over a *limited* part of the solar spectrum (here, 1000-2000 cm-1) at some resolution (here, for testing purposes only, 1 cm-1; see note below) and save the resulting output to txt file in the same directory ("."):
 - cd $PyRADS/Test03.sw
-- python compute_sw_h2o.py 1000. 1100. 0.01 300. .
+- python compute_sw_h2o.py 1000. 2000. 1. 300. .
 
-NOTE: running pyDISORT over the entire solar+thermal spectrum at line-by-line resolution is computationally very costly. The brute-force approach taken here is feasible with sufficient computational resources, e.g., by splitting the spectral calculations up over many parallel processors.
+NOTE: computing opacities + running pyDISORT over the entire solar+thermal spectrum becomes computationally very costly. It is much faster to split the spectral calculations up over many spectral chunks, distribute those over parallel processors, and them combine the spectral resolved calculations at the end. Use 
 
 NOTE: resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
 
