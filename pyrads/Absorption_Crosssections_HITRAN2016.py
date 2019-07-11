@@ -88,7 +88,8 @@ import os
 datapath = '/'.join( os.path.abspath(__file__).split('/')[:-2] ) + '/DATA/HITRAN_DATA/'
 
 #Path to the hitran by-molecule database
-hitranPath = datapath+'HITRAN2016/ThermalOnly_0-5000cm.MainIsotopesOnly/'
+# #hitranPath = datapath+'HITRAN2016/ThermalOnly_0-5000cm.MainIsotopesOnly/'
+hitranPath = datapath+'HITRAN2016/Full_0-60000cm.MainIsotopesOnly/'    # FOR SW calculations!
 
 #------------Constants and file data------------
 #
@@ -348,27 +349,27 @@ def computeAbsorption_fixedCutoff(waveGrid,getGamma,p,T,dWave,numWidths=25.,remo
     return absGrid
 
 
-#Function to  to compute absorption coefficient
-#vs. pressure at a given wavenumber wavenum. and temperature T. Line parameter data
-#is global and must be read in first.
-def absPath(p,wavenum,T=296.,numWidths = 1000.):
-        width = .1*p/1.e5
-        i1 = numpy.searchsorted(waveList,wavenum-numWidths*width)-1
-        i2 = numpy.searchsorted(waveList,wavenum+numWidths*width)+1
-        i1 = max(i1,0)
-        i2 = min(i2,len(waveList))
-        lineCenters = waveList[i1:i2]
-        lineStrengths = sList[i1:i2]
-        lineWidths = gamAirList[i1:i2]  #gamList[i1:i2]
-        TExpList1 = TExpList[i1:i2]
-        ElowList1 = ElowList[i1:i2]
-        gam = lineWidths*(p/1.013e5)*(296./T)**TExpList1
-        #Temperature scaling of line strength
-        Tfact = numpy.exp(-100.*(phys.h*phys.c/phys.k)*ElowList1*(1/T-1/296.))
-        S = lineStrengths*(T/296.)**TExpList1*Tfact
-        terms = S*gam/ \
-          (math.pi*( (lineCenters-wavenum)**2 + gam**2))
-        return sum(terms)
+# #Function to  to compute absorption coefficient
+# #vs. pressure at a given wavenumber wavenum. and temperature T. Line parameter data
+# #is global and must be read in first.
+# def absPath(p,wavenum,T=296.,numWidths = 1000.):
+#         width = .1*p/1.e5
+#         i1 = numpy.searchsorted(waveList,wavenum-numWidths*width)-1
+#         i2 = numpy.searchsorted(waveList,wavenum+numWidths*width)+1
+#         i1 = max(i1,0)
+#         i2 = min(i2,len(waveList))
+#         lineCenters = waveList[i1:i2]
+#         lineStrengths = sList[i1:i2]
+#         lineWidths = gamAirList[i1:i2]  #gamList[i1:i2]
+#         TExpList1 = TExpList[i1:i2]
+#         ElowList1 = ElowList[i1:i2]
+#         gam = lineWidths*(p/1.013e5)*(296./T)**TExpList1
+#         #Temperature scaling of line strength
+#         Tfact = numpy.exp(-100.*(phys.h*phys.c/phys.k)*ElowList1*(1/T-1/296.))
+#         S = lineStrengths*(T/296.)**TExpList1*Tfact
+#         terms = S*gam/ \
+#           (math.pi*( (lineCenters-wavenum)**2 + gam**2))
+#         return sum(terms)
 
 #Function to compute a list of values of the transmission
 #at a given frequency, for each of a set of pressures.
@@ -528,7 +529,7 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
         n = float(get(line,waveNum))
         #DKOLL:
         if n<minWave:
-            pass   # skip to next line
+            line = f.readline()   # skip to next line
         elif n>maxWave:
             break  # ignore rest of file
         else:

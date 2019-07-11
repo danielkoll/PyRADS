@@ -1,0 +1,1016 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module _disort ! in 
+    interface  ! in :_disort
+        subroutine errmsg(messag,fatal) ! in :_disort:src/disort/src/ErrPack.f
+            character*(*) :: messag
+            logical :: fatal
+        end subroutine errmsg
+        function wrtbad(varnam) ! in :_disort:src/disort/src/ErrPack.f
+            character*(*) :: varnam
+            logical :: wrtbad
+        end function wrtbad
+        function wrtdim(dimnam,minval) ! in :_disort:src/disort/src/ErrPack.f
+            character*(*) :: dimnam
+            integer :: minval
+            logical :: wrtdim
+        end function wrtdim
+        function tstbad(varnam,relerr) ! in :_disort:src/disort/src/ErrPack.f
+            character*(*) :: varnam
+            real :: relerr
+            logical :: tstbad
+        end function tstbad
+        subroutine getmom(iphas,gg,nmom,pmom) ! in :_disort:src/disort/src/GETMOM.f
+            integer :: iphas
+            real :: gg
+            integer, optional,check((len(pmom)-1)>=nmom),depend(pmom) :: nmom=(len(pmom)-1)
+            real dimension(nmom + 1) :: pmom
+        end subroutine getmom
+        function bdref(wvnmlo,wvnmhi,mu,mup,dphi) ! in :_disort:src/disort/src/BDREF.f
+            real :: wvnmlo
+            real :: wvnmhi
+            real :: mu
+            real :: mup
+            real :: dphi
+            real :: bdref
+        end function bdref
+        subroutine prtfin(utau,ntau,umu,numu,phi,nphi,maxulv,maxumu,onlyfl,rfldir,rfldn,flup,dfdt,uu,tstfir,tstfdn,tstfup,tstdfd,tstuu,maxtau,maxmu,maxaz) ! in :_disort:src/disort/src/PRTFIN.f
+            real dimension(*) :: utau
+            integer :: ntau
+            real dimension(*) :: umu
+            integer :: numu
+            real dimension(*) :: phi
+            integer :: nphi
+            integer, optional,check(shape(uu,1)==maxulv),depend(uu) :: maxulv=shape(uu,1)
+            integer, optional,check(shape(uu,0)==maxumu),depend(uu) :: maxumu=shape(uu,0)
+            logical :: onlyfl
+            real dimension(*) :: rfldir
+            real dimension(*) :: rfldn
+            real dimension(*) :: flup
+            real dimension(*) :: dfdt
+            real dimension(maxumu,maxulv,*) :: uu
+            real dimension(*) :: tstfir
+            real dimension(*) :: tstfdn
+            real dimension(*) :: tstfup
+            real dimension(*) :: tstdfd
+            real dimension(maxtau,maxmu,maxaz) :: tstuu
+            integer, optional,check(shape(tstuu,0)==maxtau),depend(tstuu) :: maxtau=shape(tstuu,0)
+            integer, optional,check(shape(tstuu,1)==maxmu),depend(tstuu) :: maxmu=shape(tstuu,1)
+            integer, optional,check(shape(tstuu,2)==maxaz),depend(tstuu) :: maxaz=shape(tstuu,2)
+        end subroutine prtfin
+        subroutine disort(nlyr,dtauc,ssalb,nmom,pmom,temper,wvnmlo,wvnmhi,usrtau,ntau,utau,nstr,usrang,numu,umu,nphi,phi,ibcnd,fbeam,umu0,phi0,fisot,lamber,albedo,btemp,ttemp,temis,plank,onlyfl,accur,prnt,header,maxcly,maxulv,maxumu,maxphi,maxmom,rfldir,rfldn,flup,dfdt,uavg,uu,albmed,trnmed) ! in :_disort:src/disort/src/DISORT.f
+            integer :: nlyr
+            real dimension(maxcly) :: dtauc
+            real dimension(maxcly),depend(maxcly) :: ssalb
+            integer :: nmom
+            real dimension(maxmom + 1,maxcly),depend(maxcly) :: pmom
+            real dimension(maxcly + 1),depend(maxcly) :: temper
+            real :: wvnmlo
+            real :: wvnmhi
+            logical :: usrtau
+            integer :: ntau
+            real dimension(maxulv) :: utau
+            integer :: nstr
+            logical :: usrang
+            integer :: numu
+            real dimension(maxumu) :: umu
+            integer :: nphi
+            real dimension(maxphi) :: phi
+            integer :: ibcnd
+            real :: fbeam
+            real :: umu0
+            real :: phi0
+            real :: fisot
+            logical :: lamber
+            real :: albedo
+            real :: btemp
+            real :: ttemp
+            real :: temis
+            logical :: plank
+            logical :: onlyfl
+            real :: accur
+            logical dimension(5) :: prnt
+            character*127 :: header
+            integer, optional,check(len(dtauc)>=maxcly),depend(dtauc) :: maxcly=len(dtauc)
+            integer, optional,check(len(utau)>=maxulv),depend(utau) :: maxulv=len(utau)
+            integer, optional,check(len(umu)>=maxumu),depend(umu) :: maxumu=len(umu)
+            integer, optional,check(len(phi)>=maxphi),depend(phi) :: maxphi=len(phi)
+            integer, optional,check((shape(pmom,0)-1)==maxmom),depend(pmom) :: maxmom=(shape(pmom,0)-1)
+            real dimension(maxulv),depend(maxulv) :: rfldir
+            real dimension(maxulv),depend(maxulv) :: rfldn
+            real dimension(maxulv),depend(maxulv) :: flup
+            real dimension(maxulv),depend(maxulv) :: dfdt
+            real dimension(maxulv),depend(maxulv) :: uavg
+            real dimension(maxumu,maxulv,maxphi),depend(maxumu,maxulv,maxphi) :: uu
+            real dimension(maxumu),depend(maxumu) :: albmed
+            real dimension(maxumu),depend(maxumu) :: trnmed
+        end subroutine disort
+        subroutine asymtx(aa,evec,eval,m,ia,ievec,ier,wkd,aad,evecd,evald) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(ia,m) :: aa
+            real dimension(ievec,m),depend(m) :: evec
+            real dimension(m),depend(m) :: eval
+            integer, optional,check(shape(aa,1)==m),depend(aa) :: m=shape(aa,1)
+            integer, optional,check(shape(aa,0)==ia),depend(aa) :: ia=shape(aa,0)
+            integer, optional,check(shape(evec,0)==ievec),depend(evec) :: ievec=shape(evec,0)
+            integer :: ier
+            double precision dimension(*) :: wkd
+            double precision dimension(ia,m),depend(ia,m) :: aad
+            double precision dimension(ia,m),depend(ia,m) :: evecd
+            double precision dimension(m),depend(m) :: evald
+        end subroutine asymtx
+        subroutine cmpint(fbeam,gc,kk,layru,ll,lyrcut,mazim,mxcmu,mxulv,mxumu,ncut,nn,nstr,plank,ntau,taucpr,umu0,utaupr,zz,zplk0,zplk1,uum) ! in :_disort:src/disort/src/DISORT.f
+            real :: fbeam
+            real dimension(mxcmu,mxcmu,*) :: gc
+            real dimension(mxcmu,*),depend(mxcmu) :: kk
+            integer dimension(*) :: layru
+            real dimension(mxcmu,*),depend(mxcmu) :: ll
+            logical :: lyrcut
+            integer :: mazim
+            integer, optional,check(shape(gc,0)==mxcmu),depend(gc) :: mxcmu=shape(gc,0)
+            integer, optional,check(len(utaupr)>=mxulv),depend(utaupr) :: mxulv=len(utaupr)
+            integer, optional,check(shape(uum,0)==mxumu),depend(uum) :: mxumu=shape(uum,0)
+            integer :: ncut
+            integer :: nn
+            integer :: nstr
+            logical :: plank
+            integer :: ntau
+            real dimension(*) :: taucpr
+            real :: umu0
+            real dimension(mxulv) :: utaupr
+            real dimension(mxcmu,*),depend(mxcmu) :: zz
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk0
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk1
+            real dimension(mxumu,mxulv),depend(mxulv) :: uum
+        end subroutine cmpint
+        subroutine fluxes(cmu,cwt,fbeam,gc,kk,layru,ll,lyrcut,maxulv,mxcmu,mxulv,ncut,nn,nstr,ntau,pi,prnt,prntu0,ssalb,taucpr,umu0,utau,utaupr,xr0,xr1,zz,zplk0,zplk1,dfdt,flup,fldn,fldir,rfldir,rfldn,uavg,u0c) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            real :: fbeam
+            real dimension(mxcmu,mxcmu,*),depend(mxcmu,mxcmu) :: gc
+            real dimension(mxcmu,*),depend(mxcmu) :: kk
+            integer dimension(mxulv) :: layru
+            real dimension(mxcmu,*),depend(mxcmu) :: ll
+            logical :: lyrcut
+            integer, optional,check(len(utau)>=maxulv),depend(utau) :: maxulv=len(utau)
+            integer, optional,check(len(cmu)>=mxcmu),depend(cmu) :: mxcmu=len(cmu)
+            integer, optional,check(len(layru)>=mxulv),depend(layru) :: mxulv=len(layru)
+            integer :: ncut
+            integer :: nn
+            integer :: nstr
+            integer :: ntau
+            real :: pi
+            logical dimension(*) :: prnt
+            logical :: prntu0
+            real dimension(*) :: ssalb
+            real dimension(*) :: taucpr
+            real :: umu0
+            real dimension(maxulv) :: utau
+            real dimension(mxulv),depend(mxulv) :: utaupr
+            real dimension(*) :: xr0
+            real dimension(*) :: xr1
+            real dimension(mxcmu,*),depend(mxcmu) :: zz
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk0
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk1
+            real dimension(maxulv),depend(maxulv) :: dfdt
+            real dimension(maxulv),depend(maxulv) :: flup
+            real dimension(mxulv),depend(mxulv) :: fldn
+            real dimension(mxulv),depend(mxulv) :: fldir
+            real dimension(maxulv),depend(maxulv) :: rfldir
+            real dimension(maxulv),depend(maxulv) :: rfldn
+            real dimension(maxulv),depend(maxulv) :: uavg
+            real dimension(mxcmu,mxulv),depend(mxcmu,mxulv) :: u0c
+        end subroutine fluxes
+        subroutine intcor(dither,fbeam,flyr,layru,lyrcut,maxmom,maxulv,maxumu,nmom,ncut,nphi,nstr,ntau,numu,oprim,phasa,phast,phasm,phirad,pi,rpd,pmom,ssalb,dtauc,tauc,taucpr,umu,umu0,utau,utaupr,uu) ! in :_disort:src/disort/src/DISORT.f
+            real :: dither
+            real :: fbeam
+            real dimension(*) :: flyr
+            integer dimension(*) :: layru
+            logical :: lyrcut
+            integer, optional,check((shape(pmom,0)-1)==maxmom),depend(pmom) :: maxmom=(shape(pmom,0)-1)
+            integer, optional,check(shape(uu,1)==maxulv),depend(uu) :: maxulv=shape(uu,1)
+            integer, optional,check(shape(uu,0)==maxumu),depend(uu) :: maxumu=shape(uu,0)
+            integer :: nmom
+            integer :: ncut
+            integer :: nphi
+            integer :: nstr
+            integer :: ntau
+            integer :: numu
+            real dimension(*) :: oprim
+            real dimension(*) :: phasa
+            real dimension(*) :: phast
+            real dimension(*) :: phasm
+            real dimension(*) :: phirad
+            real :: pi
+            real :: rpd
+            real dimension(maxmom + 1,*) :: pmom
+            real dimension(*) :: ssalb
+            real dimension(*) :: dtauc
+            real dimension(*) :: tauc
+            real dimension(*) :: taucpr
+            real dimension(*) :: umu
+            real :: umu0
+            real dimension(*) :: utau
+            real dimension(*) :: utaupr
+            real dimension(maxumu,maxulv,*) :: uu
+        end subroutine intcor
+        function secsca(ctheta,flyr,layru,maxmom,nmom,nstr,pmom,ssalb,dtauc,tauc,umu,umu0,utau,fbeam,pi) ! in :_disort:src/disort/src/DISORT.f
+            real :: ctheta
+            real dimension(*) :: flyr
+            integer :: layru
+            integer, optional,check((shape(pmom,0)-1)==maxmom),depend(pmom) :: maxmom=(shape(pmom,0)-1)
+            integer :: nmom
+            integer :: nstr
+            real dimension(maxmom + 1,*) :: pmom
+            real dimension(*) :: ssalb
+            real dimension(*) :: dtauc
+            real dimension(*) :: tauc
+            real :: umu
+            real :: umu0
+            real :: utau
+            real :: fbeam
+            real :: pi
+            real :: secsca
+        end function secsca
+        subroutine setdis(cmu,cwt,deltam,dtauc,dtaucp,expbea,fbeam,flyr,gl,ibcnd,layru,lyrcut,maxmom,maxumu,mxcmu,ncut,nlyr,ntau,nn,nstr,plank,numu,onlyfl,corint,oprim,pmom,ssalb,tauc,taucpr,utau,utaupr,umu,umu0,usrtau,usrang) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            logical :: deltam
+            real dimension(*) :: dtauc
+            real dimension(*) :: dtaucp
+            real dimension(*) :: expbea
+            real :: fbeam
+            real dimension(*) :: flyr
+            real dimension(mxcmu + 1,*),depend(mxcmu) :: gl
+            integer :: ibcnd
+            integer dimension(*) :: layru
+            logical :: lyrcut
+            integer, optional,check((shape(pmom,0)-1)==maxmom),depend(pmom) :: maxmom=(shape(pmom,0)-1)
+            integer, optional,check(len(umu)>=maxumu),depend(umu) :: maxumu=len(umu)
+            integer, optional,check(len(cmu)>=mxcmu),depend(cmu) :: mxcmu=len(cmu)
+            integer :: ncut
+            integer :: nlyr
+            integer :: ntau
+            integer :: nn
+            integer :: nstr
+            logical :: plank
+            integer :: numu
+            logical :: onlyfl
+            logical :: corint
+            real dimension(*) :: oprim
+            real dimension(maxmom + 1,*) :: pmom
+            real dimension(*) :: ssalb
+            real dimension(*) :: tauc
+            real dimension(*) :: taucpr
+            real dimension(*) :: utau
+            real dimension(*) :: utaupr
+            real dimension(maxumu) :: umu
+            real :: umu0
+            logical :: usrtau
+            logical :: usrang
+        end subroutine setdis
+        subroutine setmtx(bdr,cband,cmu,cwt,delm0,dtaucp,gc,kk,lamber,lyrcut,mi,mi9m2,mxcmu,ncol,ncut,nnlyri,nn,nstr,taucpr,wk) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mi,mi + 1) :: bdr
+            real dimension(mi9m2,nnlyri) :: cband
+            real dimension(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            real :: delm0
+            real dimension(*) :: dtaucp
+            real dimension(mxcmu,mxcmu,*),depend(mxcmu,mxcmu) :: gc
+            real dimension(mxcmu,*),depend(mxcmu) :: kk
+            logical :: lamber
+            logical :: lyrcut
+            integer, optional,check(shape(bdr,0)==mi),depend(bdr) :: mi=shape(bdr,0)
+            integer, optional,check(shape(cband,0)==mi9m2),depend(cband) :: mi9m2=shape(cband,0)
+            integer, optional,check(len(cmu)>=mxcmu),depend(cmu) :: mxcmu=len(cmu)
+            integer :: ncol
+            integer :: ncut
+            integer, optional,check(shape(cband,1)==nnlyri),depend(cband) :: nnlyri=shape(cband,1)
+            integer :: nn
+            integer :: nstr
+            real dimension(*) :: taucpr
+            real dimension(mxcmu),depend(mxcmu) :: wk
+        end subroutine setmtx
+        function sinsca(dither,layru,nlyr,phase,omega,tau,umu,umu0,utau,fbeam,pi) ! in :_disort:src/disort/src/DISORT.f
+            real :: dither
+            integer :: layru
+            integer :: nlyr
+            real dimension(*) :: phase
+            real dimension(*) :: omega
+            real dimension(*) :: tau
+            real :: umu
+            real :: umu0
+            real :: utau
+            real :: fbeam
+            real :: pi
+            real :: sinsca
+        end function sinsca
+        subroutine soleig(amb,apb,array,cmu,cwt,gl,mi,mazim,mxcmu,nn,nstr,ylmc,cc,evecc,eval,kk,gc,aad,eveccd,evald,wkd) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mi,mi) :: amb
+            real dimension(mi,mi),depend(mi,mi) :: apb
+            real dimension(mi,*),depend(mi) :: array
+            real dimension(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            real dimension(mxcmu + 1),depend(mxcmu) :: gl
+            integer, optional,check(shape(amb,0)==mi),depend(amb) :: mi=shape(amb,0)
+            integer :: mazim
+            integer, optional,check(len(cmu)>=mxcmu),depend(cmu) :: mxcmu=len(cmu)
+            integer :: nn
+            integer :: nstr
+            real dimension(mxcmu + 1,mxcmu),depend(mxcmu,mxcmu) :: ylmc
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: cc
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: evecc
+            real dimension(mi),depend(mi) :: eval
+            real dimension(mxcmu),depend(mxcmu) :: kk
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: gc
+            double precision dimension(mi,mi),depend(mi,mi) :: aad
+            double precision dimension(mi,mi),depend(mi,mi) :: eveccd
+            double precision dimension(mi),depend(mi) :: evald
+            double precision dimension(mxcmu),depend(mxcmu) :: wkd
+        end subroutine soleig
+        subroutine solve0(b,bdr,bem,bplank,cband,cmu,cwt,expbea,fbeam,fisot,ipvt,lamber,ll,lyrcut,mazim,mi,mi9m2,mxcmu,ncol,ncut,nn,nstr,nnlyri,pi,tplank,taucpr,umu0,z,zz,zplk0,zplk1) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(nnlyri) :: b
+            real dimension(mi,mi + 1) :: bdr
+            real dimension(mi),depend(mi) :: bem
+            real :: bplank
+            real dimension(mi9m2,nnlyri),depend(nnlyri) :: cband
+            real dimension(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            real dimension(*) :: expbea
+            real :: fbeam
+            real :: fisot
+            integer dimension(*) :: ipvt
+            logical :: lamber
+            real dimension(mxcmu,*),depend(mxcmu) :: ll
+            logical :: lyrcut
+            integer :: mazim
+            integer, optional,check(shape(bdr,0)==mi),depend(bdr) :: mi=shape(bdr,0)
+            integer, optional,check(shape(cband,0)==mi9m2),depend(cband) :: mi9m2=shape(cband,0)
+            integer, optional,check(len(cmu)>=mxcmu),depend(cmu) :: mxcmu=len(cmu)
+            integer :: ncol
+            integer :: ncut
+            integer :: nn
+            integer :: nstr
+            integer, optional,check(len(b)>=nnlyri),depend(b) :: nnlyri=len(b)
+            real :: pi
+            real :: tplank
+            real dimension(*) :: taucpr
+            real :: umu0
+            real dimension(nnlyri),depend(nnlyri) :: z
+            real dimension(mxcmu,*),depend(mxcmu) :: zz
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk0
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk1
+        end subroutine solve0
+        subroutine surfac(albedo,delm0,cmu,fbeam,lamber,mi,mazim,mxumu,nn,numu,onlyfl,pi,umu,umu0,usrang,wvnmlo,wvnmhi,bdr,emu,bem,rmu) ! in :_disort:src/disort/src/DISORT.f
+            real :: albedo
+            real :: delm0
+            real dimension(*) :: cmu
+            real :: fbeam
+            logical :: lamber
+            integer, optional,check(shape(bdr,0)==mi),depend(bdr) :: mi=shape(bdr,0)
+            integer :: mazim
+            integer, optional,check(len(emu)>=mxumu),depend(emu) :: mxumu=len(emu)
+            integer :: nn
+            integer :: numu
+            logical :: onlyfl
+            real :: pi
+            real dimension(*) :: umu
+            real :: umu0
+            logical :: usrang
+            real :: wvnmlo
+            real :: wvnmhi
+            real dimension(mi,mi + 1) :: bdr
+            real dimension(mxumu) :: emu
+            real dimension(mi),depend(mi) :: bem
+            real dimension(mxumu,mi + 1),depend(mxumu,mi) :: rmu
+        end subroutine surfac
+        subroutine terpev(cwt,evecc,gl,gu,mazim,mxcmu,mxumu,nn,nstr,numu,wk,ylmc,ylmu) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxcmu) :: cwt
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: evecc
+            real dimension(mxcmu + 1),depend(mxcmu) :: gl
+            real dimension(mxumu,mxcmu),depend(mxcmu) :: gu
+            integer :: mazim
+            integer, optional,check(len(cwt)>=mxcmu),depend(cwt) :: mxcmu=len(cwt)
+            integer, optional,check(shape(gu,0)==mxumu),depend(gu) :: mxumu=shape(gu,0)
+            integer :: nn
+            integer :: nstr
+            integer :: numu
+            real dimension(mxcmu),depend(mxcmu) :: wk
+            real dimension(mxcmu + 1,mxcmu),depend(mxcmu,mxcmu) :: ylmc
+            real dimension(mxcmu + 1,mxumu),depend(mxcmu,mxumu) :: ylmu
+        end subroutine terpev
+        subroutine terpso(cwt,delm0,fbeam,gl,mazim,mxcmu,plank,numu,nstr,oprim,pi,ylm0,ylmc,ylmu,psi0,psi1,xr0,xr1,z0,z1,zj,zbeam,z0u,z1u) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxcmu) :: cwt
+            real :: delm0
+            real :: fbeam
+            real dimension(mxcmu + 1),depend(mxcmu) :: gl
+            integer :: mazim
+            integer, optional,check(len(cwt)>=mxcmu),depend(cwt) :: mxcmu=len(cwt)
+            logical :: plank
+            integer :: numu
+            integer :: nstr
+            real :: oprim
+            real :: pi
+            real dimension(mxcmu + 1),depend(mxcmu) :: ylm0
+            real dimension(mxcmu + 1,mxcmu),depend(mxcmu,mxcmu) :: ylmc
+            real dimension(mxcmu + 1,*),depend(mxcmu) :: ylmu
+            real dimension(mxcmu),depend(mxcmu) :: psi0
+            real dimension(mxcmu),depend(mxcmu) :: psi1
+            real :: xr0
+            real :: xr1
+            real dimension(mxcmu),depend(mxcmu) :: z0
+            real dimension(mxcmu),depend(mxcmu) :: z1
+            real dimension(mxcmu),depend(mxcmu) :: zj
+            real dimension(*) :: zbeam
+            real dimension(*) :: z0u
+            real dimension(*) :: z1u
+        end subroutine terpso
+        subroutine upbeam(array,cc,cmu,delm0,fbeam,gl,ipvt,mazim,mxcmu,nn,nstr,pi,umu0,wk,ylm0,ylmc,zj,zz) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxcmu,mxcmu) :: array
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: cc
+            real dimension(mxcmu),depend(mxcmu) :: cmu
+            real :: delm0
+            real :: fbeam
+            real dimension(mxcmu + 1),depend(mxcmu) :: gl
+            integer dimension(*) :: ipvt
+            integer :: mazim
+            integer, optional,check(shape(array,0)==mxcmu),depend(array) :: mxcmu=shape(array,0)
+            integer :: nn
+            integer :: nstr
+            real :: pi
+            real :: umu0
+            real dimension(mxcmu),depend(mxcmu) :: wk
+            real dimension(mxcmu + 1),depend(mxcmu) :: ylm0
+            real dimension(mxcmu + 1,*),depend(mxcmu) :: ylmc
+            real dimension(mxcmu),depend(mxcmu) :: zj
+            real dimension(mxcmu),depend(mxcmu) :: zz
+        end subroutine upbeam
+        subroutine upisot(array,cc,cmu,ipvt,mxcmu,nn,nstr,oprim,wk,xr0,xr1,z0,z1,zplk0,zplk1) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxcmu,mxcmu) :: array
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: cc
+            real dimension(mxcmu),depend(mxcmu) :: cmu
+            integer dimension(*) :: ipvt
+            integer, optional,check(shape(array,0)==mxcmu),depend(array) :: mxcmu=shape(array,0)
+            integer :: nn
+            integer :: nstr
+            real :: oprim
+            real dimension(mxcmu),depend(mxcmu) :: wk
+            real :: xr0
+            real :: xr1
+            real dimension(mxcmu),depend(mxcmu) :: z0
+            real dimension(mxcmu),depend(mxcmu) :: z1
+            real dimension(mxcmu),depend(mxcmu) :: zplk0
+            real dimension(mxcmu),depend(mxcmu) :: zplk1
+        end subroutine upisot
+        subroutine usrint(bplank,cmu,cwt,delm0,dtaucp,emu,expbea,fbeam,fisot,gc,gu,kk,lamber,layru,ll,lyrcut,mazim,mxcmu,mxulv,mxumu,ncut,nlyr,nn,nstr,plank,numu,ntau,pi,rmu,taucpr,tplank,umu,umu0,utaupr,wk,zbeam,z0u,z1u,zz,zplk0,zplk1,uum) ! in :_disort:src/disort/src/DISORT.f
+            real :: bplank
+            real dimension(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            real :: delm0
+            real dimension(*) :: dtaucp
+            real dimension(mxumu) :: emu
+            real dimension(*) :: expbea
+            real :: fbeam
+            real :: fisot
+            real dimension(mxcmu,mxcmu,*),depend(mxcmu,mxcmu) :: gc
+            real dimension(mxumu,mxcmu,*),depend(mxumu,mxcmu) :: gu
+            real dimension(mxcmu,*),depend(mxcmu) :: kk
+            logical :: lamber
+            integer dimension(*) :: layru
+            real dimension(mxcmu,*),depend(mxcmu) :: ll
+            logical :: lyrcut
+            integer :: mazim
+            integer, optional,check(len(cmu)>=mxcmu),depend(cmu) :: mxcmu=len(cmu)
+            integer, optional,check(len(utaupr)>=mxulv),depend(utaupr) :: mxulv=len(utaupr)
+            integer, optional,check(len(emu)>=mxumu),depend(emu) :: mxumu=len(emu)
+            integer :: ncut
+            integer :: nlyr
+            integer :: nn
+            integer :: nstr
+            logical :: plank
+            integer :: numu
+            integer :: ntau
+            real :: pi
+            real dimension(mxumu,*),depend(mxumu) :: rmu
+            real dimension(*) :: taucpr
+            real :: tplank
+            real dimension(*) :: umu
+            real :: umu0
+            real dimension(mxulv) :: utaupr
+            real dimension(mxcmu),depend(mxcmu) :: wk
+            real dimension(mxumu,*),depend(mxumu) :: zbeam
+            real dimension(mxumu,*),depend(mxumu) :: z0u
+            real dimension(mxumu,*),depend(mxumu) :: z1u
+            real dimension(mxcmu,*),depend(mxcmu) :: zz
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk0
+            real dimension(mxcmu,*),depend(mxcmu) :: zplk1
+            real dimension(mxumu,mxulv),depend(mxumu,mxulv) :: uum
+        end subroutine usrint
+        function xifunc(umu1,umu2,umu3,tau) ! in :_disort:src/disort/src/DISORT.f
+            real :: umu1
+            real :: umu2
+            real :: umu3
+            real :: tau
+            real :: xifunc
+        end function xifunc
+        subroutine chekin(nlyr,dtauc,ssalb,nmom,pmom,temper,wvnmlo,wvnmhi,usrtau,ntau,utau,nstr,usrang,numu,umu,nphi,phi,ibcnd,fbeam,umu0,phi0,fisot,lamber,albedo,btemp,ttemp,temis,plank,onlyfl,deltam,corint,accur,tauc,maxcly,maxulv,maxumu,maxphi,maxmom,mxcly,mxulv,mxumu,mxcmu,mxphi,mxsqt) ! in :_disort:src/disort/src/DISORT.f
+            integer :: nlyr
+            real dimension(maxcly) :: dtauc
+            real dimension(maxcly),depend(maxcly) :: ssalb
+            integer :: nmom
+            real dimension(maxmom + 1,maxcly),depend(maxcly) :: pmom
+            real dimension(maxcly + 1),depend(maxcly) :: temper
+            real :: wvnmlo
+            real :: wvnmhi
+            logical :: usrtau
+            integer :: ntau
+            real dimension(maxulv) :: utau
+            integer :: nstr
+            logical :: usrang
+            integer :: numu
+            real dimension(maxumu) :: umu
+            integer :: nphi
+            real dimension(maxphi) :: phi
+            integer :: ibcnd
+            real :: fbeam
+            real :: umu0
+            real :: phi0
+            real :: fisot
+            logical :: lamber
+            real :: albedo
+            real :: btemp
+            real :: ttemp
+            real :: temis
+            logical :: plank
+            logical :: onlyfl
+            logical :: deltam
+            logical :: corint
+            real :: accur
+            real dimension(mxcly + 1) :: tauc
+            integer, optional,check(len(dtauc)>=maxcly),depend(dtauc) :: maxcly=len(dtauc)
+            integer, optional,check(len(utau)>=maxulv),depend(utau) :: maxulv=len(utau)
+            integer, optional,check(len(umu)>=maxumu),depend(umu) :: maxumu=len(umu)
+            integer, optional,check(len(phi)>=maxphi),depend(phi) :: maxphi=len(phi)
+            integer, optional,check((shape(pmom,0)-1)==maxmom),depend(pmom) :: maxmom=(shape(pmom,0)-1)
+            integer, optional,check((len(tauc)-1)>=mxcly),depend(tauc) :: mxcly=(len(tauc)-1)
+            integer :: mxulv
+            integer :: mxumu
+            integer :: mxcmu
+            integer :: mxphi
+            integer :: mxsqt
+        end subroutine chekin
+        function dref(wvnmlo,wvnmhi,mu) ! in :_disort:src/disort/src/DISORT.f
+            real :: wvnmlo
+            real :: wvnmhi
+            real :: mu
+            real :: dref
+        end function dref
+        subroutine lepoly(nmu,m,maxmu,twonm1,mu,sqt,ylm) ! in :_disort:src/disort/src/DISORT.f
+            integer :: nmu
+            integer :: m
+            integer, optional,check((shape(ylm,0)-1)==maxmu),depend(ylm) :: maxmu=(shape(ylm,0)-1)
+            integer :: twonm1
+            real dimension(*) :: mu
+            real dimension(*) :: sqt
+            real dimension(maxmu + 1,*) :: ylm
+        end subroutine lepoly
+        function plkavg(wnumlo,wnumhi,t) ! in :_disort:src/disort/src/DISORT.f
+            real :: wnumlo
+            real :: wnumhi
+            real :: t
+            real :: plkavg
+        end function plkavg
+        subroutine pravin(umu,numu,mxumu,utau,ntau,u0u) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(numu) :: umu
+            integer, optional,check(len(umu)>=numu),depend(umu) :: numu=len(umu)
+            integer, optional,check(shape(u0u,0)==mxumu),depend(u0u) :: mxumu=shape(u0u,0)
+            real dimension(ntau) :: utau
+            integer, optional,check(len(utau)>=ntau),depend(utau) :: ntau=len(utau)
+            real dimension(mxumu,*) :: u0u
+        end subroutine pravin
+        subroutine prtinp(nlyr,dtauc,dtaucp,ssalb,nmom,pmom,temper,wvnmlo,wvnmhi,ntau,utau,nstr,numu,umu,nphi,phi,ibcnd,fbeam,umu0,phi0,fisot,lamber,albedo,btemp,ttemp,temis,deltam,plank,onlyfl,corint,accur,flyr,lyrcut,oprim,tauc,taucpr,maxmom,prtmom) ! in :_disort:src/disort/src/DISORT.f
+            integer :: nlyr
+            real dimension(*) :: dtauc
+            real dimension(*) :: dtaucp
+            real dimension(*) :: ssalb
+            integer :: nmom
+            real dimension(maxmom + 1,*) :: pmom
+            real dimension(*) :: temper
+            real :: wvnmlo
+            real :: wvnmhi
+            integer :: ntau
+            real dimension(*) :: utau
+            integer :: nstr
+            integer :: numu
+            real dimension(*) :: umu
+            integer :: nphi
+            real dimension(*) :: phi
+            integer :: ibcnd
+            real :: fbeam
+            real :: umu0
+            real :: phi0
+            real :: fisot
+            logical :: lamber
+            real :: albedo
+            real :: btemp
+            real :: ttemp
+            real :: temis
+            logical :: deltam
+            logical :: plank
+            logical :: onlyfl
+            logical :: corint
+            real :: accur
+            real dimension(*) :: flyr
+            logical :: lyrcut
+            real dimension(*) :: oprim
+            real dimension(*) :: tauc
+            real dimension(*) :: taucpr
+            integer, optional,check((shape(pmom,0)-1)==maxmom),depend(pmom) :: maxmom=(shape(pmom,0)-1)
+            logical :: prtmom
+        end subroutine prtinp
+        subroutine prtint(uu,utau,ntau,umu,numu,phi,nphi,maxulv,maxumu) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(maxumu,maxulv,*) :: uu
+            real dimension(*) :: utau
+            integer :: ntau
+            real dimension(*) :: umu
+            integer :: numu
+            real dimension(*) :: phi
+            integer :: nphi
+            integer, optional,check(shape(uu,1)==maxulv),depend(uu) :: maxulv=shape(uu,1)
+            integer, optional,check(shape(uu,0)==maxumu),depend(uu) :: maxumu=shape(uu,0)
+        end subroutine prtint
+        subroutine qgausn(m,gmu,gwt) ! in :_disort:src/disort/src/DISORT.f
+            integer, optional,check(len(gmu)>=m),depend(gmu) :: m=len(gmu)
+            real dimension(m) :: gmu
+            real dimension(m),depend(m) :: gwt
+        end subroutine qgausn
+        function ratio(a,b) ! in :_disort:src/disort/src/DISORT.f
+            real :: a
+            real :: b
+            real :: ratio
+        end function ratio
+        subroutine slftst(corint,accur,albedo,btemp,deltam,dtauc,fbeam,fisot,ibcnd,lamber,nlyr,plank,nphi,numu,nstr,ntau,onlyfl,phi,phi0,nmom,pmom,prnt,prntu0,ssalb,temis,temper,ttemp,umu,usrang,usrtau,utau,umu0,wvnmhi,wvnmlo,compar,flup,rfldir,rfldn,uu) ! in :_disort:src/disort/src/DISORT.f
+            logical :: corint
+            real :: accur
+            real :: albedo
+            real :: btemp
+            logical :: deltam
+            real :: dtauc
+            real :: fbeam
+            real :: fisot
+            integer :: ibcnd
+            logical :: lamber
+            integer :: nlyr
+            logical :: plank
+            integer :: nphi
+            integer :: numu
+            integer :: nstr
+            integer :: ntau
+            logical :: onlyfl
+            real :: phi
+            real :: phi0
+            integer :: nmom
+            real dimension(*) :: pmom
+            logical dimension(*) :: prnt
+            logical dimension(*) :: prntu0
+            real :: ssalb
+            real :: temis
+            real dimension(*) :: temper
+            real :: ttemp
+            real :: umu
+            logical :: usrang
+            logical :: usrtau
+            real :: utau
+            real :: umu0
+            real :: wvnmhi
+            real :: wvnmlo
+            logical :: compar
+            real :: flup
+            real :: rfldir
+            real :: rfldn
+            real :: uu
+        end subroutine slftst
+        subroutine zeroal(nd1,expbea,flyr,oprim,phasa,phast,phasm,taucpr,xr0,xr1,nd2,cmu,cwt,psi0,psi1,wk,z0,z1,zj,nd3,ylm0,nd4,array,cc,evecc,nd5,gl,nd6,ylmc,nd7,ylmu,nd8,kk,ll,zz,zplk0,zplk1,nd9,gc,nd10,layru,utaupr,nd11,gu,nd12,z0u,z1u,zbeam,nd13,eval,nd14,amb,apb,nd15,ipvt,z,nd16,rfldir,rfldn,flup,uavg,dfdt,nd17,albmed,trnmed,nd18,u0u,nd19,uu) ! in :_disort:src/disort/src/DISORT.f
+            integer :: nd1
+            real dimension(*) :: expbea
+            real dimension(*) :: flyr
+            real dimension(*) :: oprim
+            real dimension(*) :: phasa
+            real dimension(*) :: phast
+            real dimension(*) :: phasm
+            real dimension(*) :: taucpr
+            real dimension(*) :: xr0
+            real dimension(*) :: xr1
+            integer :: nd2
+            real dimension(*) :: cmu
+            real dimension(*) :: cwt
+            real dimension(*) :: psi0
+            real dimension(*) :: psi1
+            real dimension(*) :: wk
+            real dimension(*) :: z0
+            real dimension(*) :: z1
+            real dimension(*) :: zj
+            integer :: nd3
+            real dimension(*) :: ylm0
+            integer :: nd4
+            real dimension(*) :: array
+            real dimension(*) :: cc
+            real dimension(*) :: evecc
+            integer :: nd5
+            real dimension(*) :: gl
+            integer :: nd6
+            real dimension(*) :: ylmc
+            integer :: nd7
+            real dimension(*) :: ylmu
+            integer :: nd8
+            real dimension(*) :: kk
+            real dimension(*) :: ll
+            real dimension(*) :: zz
+            real dimension(*) :: zplk0
+            real dimension(*) :: zplk1
+            integer :: nd9
+            real dimension(*) :: gc
+            integer :: nd10
+            integer dimension(*) :: layru
+            real dimension(*) :: utaupr
+            integer :: nd11
+            real dimension(*) :: gu
+            integer :: nd12
+            real dimension(*) :: z0u
+            real dimension(*) :: z1u
+            real dimension(*) :: zbeam
+            integer :: nd13
+            real dimension(*) :: eval
+            integer :: nd14
+            real dimension(*) :: amb
+            real dimension(*) :: apb
+            integer :: nd15
+            integer dimension(*) :: ipvt
+            real dimension(*) :: z
+            integer :: nd16
+            real dimension(*) :: rfldir
+            real dimension(*) :: rfldn
+            real dimension(*) :: flup
+            real dimension(*) :: uavg
+            real dimension(*) :: dfdt
+            integer :: nd17
+            real dimension(*) :: albmed
+            real dimension(*) :: trnmed
+            integer :: nd18
+            real dimension(*) :: u0u
+            integer :: nd19
+            real dimension(*) :: uu
+        end subroutine zeroal
+        subroutine zeroit(a,length) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(length) :: a
+            integer, optional,check(len(a)>=length),depend(a) :: length=len(a)
+        end subroutine zeroit
+        subroutine albtrn(albedo,amb,apb,array,b,bdr,cband,cc,cmu,cwt,dtaucp,eval,evecc,gl,gc,gu,ipvt,kk,ll,nlyr,nn,nstr,numu,prnt,taucpr,umu,u0u,wk,ylmc,ylmu,z,aad,evald,eveccd,wkd,mi,mi9m2,maxumu,mxcmu,mxumu,nnlyri,sqt,albmed,trnmed) ! in :_disort:src/disort/src/DISORT.f
+            real :: albedo
+            real dimension(mi,mi) :: amb
+            real dimension(mi,mi),depend(mi,mi) :: apb
+            real dimension(mxcmu,mxcmu) :: array
+            real dimension(nnlyri) :: b
+            real dimension(mi,mi + 1),depend(mi,mi) :: bdr
+            real dimension(mi9m2,nnlyri),depend(nnlyri) :: cband
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: cc
+            real dimension(mxcmu),depend(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            real dimension(*) :: dtaucp
+            real dimension(mi),depend(mi) :: eval
+            real dimension(mxcmu,mxcmu),depend(mxcmu,mxcmu) :: evecc
+            real dimension(mxcmu + 1,*),depend(mxcmu) :: gl
+            real dimension(mxcmu,mxcmu,*),depend(mxcmu,mxcmu) :: gc
+            real dimension(mxumu,mxcmu,*),depend(mxcmu) :: gu
+            integer dimension(*) :: ipvt
+            real dimension(mxcmu,*),depend(mxcmu) :: kk
+            real dimension(mxcmu,*),depend(mxcmu) :: ll
+            integer :: nlyr
+            integer :: nn
+            integer :: nstr
+            integer :: numu
+            logical dimension(*) :: prnt
+            real dimension(*) :: taucpr
+            real dimension(maxumu) :: umu
+            real dimension(mxumu,*),depend(mxumu) :: u0u
+            real dimension(mxcmu),depend(mxcmu) :: wk
+            real dimension(mxcmu + 1,mxcmu),depend(mxcmu,mxcmu) :: ylmc
+            real dimension(mxcmu + 1,*),depend(mxcmu) :: ylmu
+            real dimension(nnlyri),depend(nnlyri) :: z
+            double precision dimension(mi,mi),depend(mi,mi) :: aad
+            double precision dimension(mi),depend(mi) :: evald
+            double precision dimension(mi,mi),depend(mi,mi) :: eveccd
+            double precision dimension(mxcmu),depend(mxcmu) :: wkd
+            integer, optional,check(shape(amb,0)==mi),depend(amb) :: mi=shape(amb,0)
+            integer, optional,check(shape(cband,0)==mi9m2),depend(cband) :: mi9m2=shape(cband,0)
+            integer, optional,check(len(umu)>=maxumu),depend(umu) :: maxumu=len(umu)
+            integer, optional,check(shape(array,0)==mxcmu),depend(array) :: mxcmu=shape(array,0)
+            integer, optional,check(shape(gu,0)==mxumu),depend(gu) :: mxumu=shape(gu,0)
+            integer, optional,check(len(b)>=nnlyri),depend(b) :: nnlyri=len(b)
+            real dimension(*) :: sqt
+            real dimension(maxumu),depend(maxumu) :: albmed
+            real dimension(maxumu),depend(maxumu) :: trnmed
+        end subroutine albtrn
+        subroutine altrin(gu,kk,ll,mxcmu,mxumu,maxumu,nlyr,nn,nstr,numu,taucpr,umu,u0u,wk) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxumu,mxcmu,*) :: gu
+            real dimension(mxcmu,*),depend(mxcmu) :: kk
+            real dimension(mxcmu,*),depend(mxcmu) :: ll
+            integer, optional,check(shape(gu,1)==mxcmu),depend(gu) :: mxcmu=shape(gu,1)
+            integer, optional,check(shape(gu,0)==mxumu),depend(gu) :: mxumu=shape(gu,0)
+            integer, optional,check(len(umu)>=maxumu),depend(umu) :: maxumu=len(umu)
+            integer :: nlyr
+            integer :: nn
+            integer :: nstr
+            integer :: numu
+            real dimension(*) :: taucpr
+            real dimension(maxumu) :: umu
+            real dimension(mxumu,*),depend(mxumu) :: u0u
+            real dimension(mxcmu),depend(mxcmu) :: wk
+        end subroutine altrin
+        subroutine praltr(umu,numu,albmed,trnmed) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(numu) :: umu
+            integer, optional,check(len(umu)>=numu),depend(umu) :: numu=len(umu)
+            real dimension(numu),depend(numu) :: albmed
+            real dimension(numu),depend(numu) :: trnmed
+        end subroutine praltr
+        subroutine solve1(b,cband,fisot,ihom,ipvt,ll,mi9m2,mxcmu,ncol,ncut,nn,nnlyri,nstr) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(nnlyri) :: b
+            real dimension(mi9m2,nnlyri),depend(nnlyri) :: cband
+            real :: fisot
+            integer :: ihom
+            integer dimension(nnlyri),depend(nnlyri) :: ipvt
+            real dimension(mxcmu,*) :: ll
+            integer, optional,check(shape(cband,0)==mi9m2),depend(cband) :: mi9m2=shape(cband,0)
+            integer, optional,check(shape(ll,0)==mxcmu),depend(ll) :: mxcmu=shape(ll,0)
+            integer :: ncol
+            integer :: ncut
+            integer :: nn
+            integer, optional,check(len(b)>=nnlyri),depend(b) :: nnlyri=len(b)
+            integer :: nstr
+        end subroutine solve1
+        subroutine spaltr(cmu,cwt,gc,kk,ll,mxcmu,nlyr,nn,nstr,taucpr,sflup,sfldn) ! in :_disort:src/disort/src/DISORT.f
+            real dimension(mxcmu) :: cmu
+            real dimension(mxcmu),depend(mxcmu) :: cwt
+            real dimension(mxcmu,mxcmu,*),depend(mxcmu,mxcmu) :: gc
+            real dimension(mxcmu,*),depend(mxcmu) :: kk
+            real dimension(mxcmu,*),depend(mxcmu) :: ll
+            integer, optional,check(len(cmu)>=mxcmu),depend(cmu) :: mxcmu=len(cmu)
+            integer :: nlyr
+            integer :: nn
+            integer :: nstr
+            real dimension(*) :: taucpr
+            real :: sflup
+            real :: sfldn
+        end subroutine spaltr
+        function r1mach(i) ! in :_disort:src/disort/src/RDI1MACH.f
+            integer :: i
+            real :: r1mach
+        end function r1mach
+        function d1mach(i) ! in :_disort:src/disort/src/RDI1MACH.f
+            integer :: i
+            double precision :: d1mach
+        end function d1mach
+        function i1mach(i) ! in :_disort:src/disort/src/RDI1MACH.f
+            integer :: i
+            integer :: i1mach
+        end function i1mach
+        subroutine sgbco(abd,lda,n,ml,mu,ipvt,rcond,z) ! in :_disort:src/disort/src/LINPAK.f
+            real dimension(lda,*) :: abd
+            integer, optional,check(shape(abd,0)==lda),depend(abd) :: lda=shape(abd,0)
+            integer :: n
+            integer :: ml
+            integer :: mu
+            integer dimension(*) :: ipvt
+            real :: rcond
+            real dimension(*) :: z
+        end subroutine sgbco
+        subroutine sgbfa(abd,lda,n,ml,mu,ipvt,info) ! in :_disort:src/disort/src/LINPAK.f
+            real dimension(lda,*) :: abd
+            integer, optional,check(shape(abd,0)==lda),depend(abd) :: lda=shape(abd,0)
+            integer :: n
+            integer :: ml
+            integer :: mu
+            integer dimension(*) :: ipvt
+            integer :: info
+        end subroutine sgbfa
+        subroutine sgbsl(abd,lda,n,ml,mu,ipvt,b,job) ! in :_disort:src/disort/src/LINPAK.f
+            real dimension(lda,*) :: abd
+            integer, optional,check(shape(abd,0)==lda),depend(abd) :: lda=shape(abd,0)
+            integer :: n
+            integer :: ml
+            integer :: mu
+            integer dimension(*) :: ipvt
+            real dimension(*) :: b
+            integer :: job
+        end subroutine sgbsl
+        subroutine sgeco(a,lda,n,ipvt,rcond,z) ! in :_disort:src/disort/src/LINPAK.f
+            real dimension(lda,*) :: a
+            integer, optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer :: n
+            integer dimension(*) :: ipvt
+            real :: rcond
+            real dimension(*) :: z
+        end subroutine sgeco
+        subroutine sgefa(a,lda,n,ipvt,info) ! in :_disort:src/disort/src/LINPAK.f
+            real dimension(lda,*) :: a
+            integer, optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer :: n
+            integer dimension(*) :: ipvt
+            integer :: info
+        end subroutine sgefa
+        subroutine sgesl(a,lda,n,ipvt,b,job) ! in :_disort:src/disort/src/LINPAK.f
+            real dimension(lda,*) :: a
+            integer, optional,check(shape(a,0)==lda),depend(a) :: lda=shape(a,0)
+            integer :: n
+            integer dimension(*) :: ipvt
+            real dimension(*) :: b
+            integer :: job
+        end subroutine sgesl
+        function sasum(n,sx,incx) ! in :_disort:src/disort/src/LINPAK.f
+            integer :: n
+            real dimension(*) :: sx
+            integer :: incx
+            real :: sasum
+        end function sasum
+        subroutine saxpy(n,sa,sx,incx,sy,incy) ! in :_disort:src/disort/src/LINPAK.f
+            integer :: n
+            real :: sa
+            real dimension(*) :: sx
+            integer :: incx
+            real dimension(*) :: sy
+            integer :: incy
+        end subroutine saxpy
+        function sdot(n,sx,incx,sy,incy) ! in :_disort:src/disort/src/LINPAK.f
+            integer :: n
+            real dimension(*) :: sx
+            integer :: incx
+            real dimension(*) :: sy
+            integer :: incy
+            real :: sdot
+        end function sdot
+        subroutine sscal(n,sa,sx,incx) ! in :_disort:src/disort/src/LINPAK.f
+            integer :: n
+            real :: sa
+            real dimension(*) :: sx
+            integer :: incx
+        end subroutine sscal
+        subroutine sswap(n,sx,incx,sy,incy) ! in :_disort:src/disort/src/LINPAK.f
+            integer :: n
+            real dimension(*) :: sx
+            integer :: incx
+            real dimension(*) :: sy
+            integer :: incy
+        end subroutine sswap
+        function isamax(n,sx,incx) ! in :_disort:src/disort/src/LINPAK.f
+            integer :: n
+            real dimension(*) :: sx
+            integer :: incx
+            integer :: isamax
+        end function isamax
+        subroutine run(maxcly,dtauc,ssalb,maxmom,temper,iphas,gg,wvnmlo,wvnmhi,usrtau,maxulv,utau,nstr,usrang,maxumu,umu,maxphi,phi,ibcnd,fbeam,umu0,phi0,fisot,lamber,albedo,btemp,ttemp,temis,plank,onlyfl,accur,prnt,rfldir,rfldn,flup,dfdt,uavg,uu,albmed,trnmed) ! in :_disort:src/disort/Driver.f
+            integer, optional,intent(hide),check(len(dtauc)>=maxcly),depend(dtauc) :: maxcly=len(dtauc)
+            real dimension(maxcly),intent(in) :: dtauc
+            real dimension(maxcly),intent(in),depend(maxcly) :: ssalb
+            integer intent(in) :: maxmom
+            real dimension(maxcly + 1),intent(in),depend(maxcly) :: temper
+            integer dimension(maxcly),intent(in),depend(maxcly) :: iphas
+            real dimension(maxcly),intent(in),depend(maxcly) :: gg
+            real intent(in) :: wvnmlo
+            real intent(in) :: wvnmhi
+            logical intent(in) :: usrtau
+            integer, optional,intent(hide),check(len(utau)>=maxulv),depend(utau) :: maxulv=len(utau)
+            real dimension(maxulv),intent(in) :: utau
+            integer intent(in) :: nstr
+            logical intent(in) :: usrang
+            integer, optional,intent(hide),check(len(umu)>=maxumu),depend(umu) :: maxumu=len(umu)
+            real dimension(maxumu),intent(in) :: umu
+            integer, optional,intent(hide),check(len(phi)>=maxphi),depend(phi) :: maxphi=len(phi)
+            real dimension(maxphi),intent(in) :: phi
+            integer intent(in) :: ibcnd
+            real intent(in) :: fbeam
+            real intent(in) :: umu0
+            real intent(in) :: phi0
+            real intent(in) :: fisot
+            logical intent(in) :: lamber
+            real intent(in) :: albedo
+            real intent(in) :: btemp
+            real intent(in) :: ttemp
+            real intent(in) :: temis
+            logical intent(in) :: plank
+            logical intent(in) :: onlyfl
+            real intent(in) :: accur
+            logical dimension(5),intent(in) :: prnt
+            real dimension(maxulv),intent(out),depend(maxulv) :: rfldir
+            real dimension(maxulv),intent(out),depend(maxulv) :: rfldn
+            real dimension(maxulv),intent(out),depend(maxulv) :: flup
+            real dimension(maxulv),intent(out),depend(maxulv) :: dfdt
+            real dimension(maxulv),intent(out),depend(maxulv) :: uavg
+            real dimension(maxumu,maxulv,maxphi),intent(out),depend(maxumu,maxulv,maxphi) :: uu
+            real dimension(maxumu),intent(out),depend(maxumu) :: albmed
+            real dimension(maxumu),intent(out),depend(maxumu) :: trnmed
+        end subroutine run
+    end interface 
+end python module _disort
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
