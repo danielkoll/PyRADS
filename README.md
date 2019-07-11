@@ -8,6 +8,7 @@ Currently, PyRADS is only valid for longwave calculations (no scattering).
 References:
 
 (1) Koll & Cronin, 2018, https://doi.org/10.1073/pnas.1809868115.
+
 (2) Koll & Cronin, 2019, The Astrophysical Journal.
 
 # Installation
