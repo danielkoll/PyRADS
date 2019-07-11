@@ -50,9 +50,9 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - cd $PyRADS/Test02.runaway
 - python compute_olr_h2o.01.100RH.py
 
-To compute SW fluxes in W/m2 for a given surface temperature (here, 300 K) over a *limited* part of the solar spectrum (here, 1000-2000 cm-1) at some resolution (here, 0.01 cm-1; see note below) and save the resulting output to txt file in the same directory ("."):
+To compute SW fluxes in W/m2 for a given surface temperature (here, 300 K) over a *limited* part of the solar spectrum (here, 1000-2000 cm-1) at some resolution (here, 1 cm-1; see note below) and save the resulting output to txt file in the same directory ("."):
 - cd $PyRADS/Test03.sw
-- python compute_sw_h2o.py 1000. 2000. 0.01 300. .
+- python compute_sw_h2o.py 1000. 2000. 1. 300. .
 
 To stitch together the SW fluxes across the entire solar spectrum (takes a while even at low spectral res; see note below):
 - cd $PyRADS/Test04.sw_full_spectrum
