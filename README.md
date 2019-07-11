@@ -17,7 +17,16 @@ References:
 - (on a Mac) make -f make_cntnm osxGNUdbl
 - (on a Mac if you are using gfortran installed with conda) make -f make_cntnm osxGNUCONDAdbl
 
-3) Run test scripts
+3) Manually install the pyDISORT wrapper, which solves
+  the radiative transfer equations with scattering (=in the shortwave).
+  Steps marked with * use conda to create a separate environment, and are optional.
+  
+* conda create --clone base --name base_w_pyDISORT
+* conda activate base_w_pyDISORT
+- cd $PyRADS/pyDISORT-master
+- python 
+
+4) Run test scripts
 
 To compute outgoing longwave radiation (OLR) in W/m2 for a given surface temperature:
 - cd $PyRADS/Test01.olr
@@ -35,6 +44,8 @@ NOTE: resolution in test scripts was chosen for relative speed, not accuracy. Fo
 Python 2 or 3 with numpy and scipy.
 
 For the MTCKD continuum model: gmake and gfortran.
+
+For the pyDISORT radiation solver: see https://github.com/chanGimeno/pyDISORT.
 
 # Acknowledgements
 PyRADS makes use of HITRAN 2016 line lists (http://hitran.org/), AER's MTCKD continuum model (http://rtweb.aer.com/continuum_frame.html), and the PyTran script published by Ray Pierrehumbert as part of the courseware for "Principles of Planetary Climates" (https://geosci.uchicago.edu/~rtp1/PrinciplesPlanetaryClimate/). Brian Rose (http://www.atmos.albany.edu/facstaff/brose/) has helped improve the code.
