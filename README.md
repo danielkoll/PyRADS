@@ -59,11 +59,12 @@ To stitch together the SW fluxes across the entire solar spectrum (takes a while
 - python compute_sw_h2o.py 1000. 10000. 1. 300. .
 - python compute_sw_h2o.py 10000. 20000. 1. 300. .
 - python compute_sw_h2o.py 20000. 30000. 1. 300. .
-- python compute_sw_h2o.py 30000. 50000. 1. 300. .
-- python compute_sw_h2o.py 50000. 80000. 1. 300. .
+- python compute_sw_h2o.py 30000. 90000. 10. 300. .
 - python merge_spectrum.py
 
 NOTE: computing opacities + running pyDISORT over the entire solar spectrum becomes computationally very costly. It is much faster to split the spectral calculations up over many spectral chunks, distribute those over parallel processors, and them combine the spectral resolved calculations at the end. Use Merge_Spectral_Output.py to combine discrete chunks of the spectrum.
+
+NOTE: spectral resolution should reflect the available data. E.g., HITRAN2016 doesn't contain H2O lines beyond ~25000 cm-1, so there is no need to retain high spectral resolution in the UV.
 
 NOTE: resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018) and Koll & Cronin (2019).
 
