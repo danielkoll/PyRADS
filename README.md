@@ -24,7 +24,15 @@ References:
 * conda create --clone base --name base_w_pyDISORT
 * conda activate base_w_pyDISORT
 - cd $PyRADS/pyDISORT-master
-- python 
+- python setup.py install
+
+  To test whether pyDISORT was successfully installed:
+- cd $PyRADS/pyDISORT-master/test
+- python test_disort.py
+- python test_Rayleigh.py
+
+  If the installation failed, the test scripts will return "ImportError: No module named disort".
+  If the installation worked, the test scripts will print a large slew of output.
 
 4) Run test scripts
 
@@ -36,6 +44,11 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - cd $PyRADS/Test02.runaway
 - python compute_olr_h2o.01.100RH.py
 
+To compute SW fluxes in W/m2 for a given surface temperature (over a *limited* part of the solar spectrum) and save the resulting output to txt file:
+- cd $PyRADS/Test03.sw
+- python compute_sw_h2o.py 1000. 1100. 0.01 300. .
+
+NOTE: running pyDISORT over the entire solar+thermal spectrum at line-by-line resolution is computationally very costly. The brute-force approach here is feasible with sufficient computational resources, e.g., splitting the solar spectrum over many parallel processors.
 
 NOTE: resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
 
