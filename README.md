@@ -49,7 +49,7 @@ To compute SW fluxes in W/m2 for a given surface temperature (over a *limited* p
 - cd $PyRADS/Test03.sw
 - python compute_sw_h2o.py 1000. 1100. 0.01 300. .
 
-NOTE: running pyDISORT over the entire solar+thermal spectrum at line-by-line resolution is computationally very costly. The brute-force approach here is feasible with sufficient computational resources, e.g., splitting the solar spectrum over many parallel processors.
+NOTE: running pyDISORT over the entire solar+thermal spectrum at line-by-line resolution is computationally very costly. The brute-force approach taken here is feasible with sufficient computational resources, e.g., by splitting the spectral calculations up over many parallel processors.
 
 NOTE: resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
 
