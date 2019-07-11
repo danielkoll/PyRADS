@@ -528,7 +528,7 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
         n = float(get(line,waveNum))
         #DKOLL:
         if n<minWave:
-            pass   # skip to next line
+            line = f.readline()   # skip to next line
         elif n>maxWave:
             break  # ignore rest of file
         else:
