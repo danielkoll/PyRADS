@@ -86,8 +86,8 @@ if saveOutput:
 
         # compute optical thickness:
         #   -> this is the computationally most intensive step
-        g.tau = pyrads.OpticalThickness.compute_tau_H2ON2(g.p,g.T,g.q,g,params, RH=params.RH )
-
+        g.tau,g.omega = pyrads.OpticalThickness.compute_tau_omega_H2ON2(g.p,g.T,g.q,g,params, RH=params.RH )
+        
         # compute Planck functions etc:
         #   -> here: fully spectrally resolved!
         T_2D = np.tile( g.T, (g.Nn,1) ).T               # [press x wave]
