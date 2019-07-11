@@ -8,6 +8,7 @@ Currently, PyRADS is only valid for longwave calculations (no scattering).
 References:
 
 (1) Koll & Cronin, 2018, https://doi.org/10.1073/pnas.1809868115.
+(2) Koll & Cronin, 2019, The Astrophysical Journal.
 
 # Installation
 1) Download to your own computer.
@@ -45,13 +46,22 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - cd $PyRADS/Test02.runaway
 - python compute_olr_h2o.01.100RH.py
 
-To compute SW fluxes in W/m2 for a given surface temperature (here, 300 K) over a *limited* part of the solar spectrum (here, 1000-2000 cm-1) at some resolution (here, for testing purposes only, 1 cm-1; see note below) and save the resulting output to txt file in the same directory ("."):
+To compute SW fluxes in W/m2 for a given surface temperature (here, 300 K) over a *limited* part of the solar spectrum (here, 1000-2000 cm-1) at some resolution (here, 0.01 cm-1; see note below) and save the resulting output to txt file in the same directory ("."):
 - cd $PyRADS/Test03.sw
-- python compute_sw_h2o.py 1000. 2000. 1. 300. .
+- python compute_sw_h2o.py 1000. 2000. 0.01 300. .
 
-NOTE: computing opacities + running pyDISORT over the entire solar+thermal spectrum becomes computationally very costly. It is much faster to split the spectral calculations up over many spectral chunks, distribute those over parallel processors, and them combine the spectral resolved calculations at the end. Use 
+To stitch together the SW fluxes across the entire solar spectrum (takes a while even at low spectral res; see note below):
+- cd $PyRADS/Test03.sw
+- python compute_sw_h2o.py 1000. 10000. 1. 300. .
+- python compute_sw_h2o.py 10000. 20000. 1. 300. .
+- python compute_sw_h2o.py 20000. 30000. 1. 300. .
+- python compute_sw_h2o.py 30000. 50000. 1. 300. .
+- python compute_sw_h2o.py 50000. 80000. 1. 300. .
+- python merge_spectrum.py
 
-NOTE: resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
+NOTE: computing opacities + running pyDISORT over the entire solar+thermal spectrum becomes computationally very costly. It is much faster to split the spectral calculations up over many spectral chunks, distribute those over parallel processors, and them combine the spectral resolved calculations at the end. Use Merge_Spectral_Output.py to combine discrete chunks of the spectrum.
+
+NOTE: resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018) and Koll & Cronin (2019).
 
 
 # Requirements
