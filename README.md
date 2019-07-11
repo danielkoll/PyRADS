@@ -19,10 +19,10 @@ References:
 
 3) Manually install the pyDISORT wrapper, which solves
   the radiative transfer equations with scattering (=in the shortwave).
-  Steps marked with * use conda to create a separate environment, and are optional.
+  Steps marked with (x) use conda to create a separate environment, and are optional.
   
-* conda create --clone base --name base_w_pyDISORT
-* conda activate base_w_pyDISORT
+- (x) conda create --clone base --name base_w_pyDISORT
+- (x) conda activate base_w_pyDISORT
 - cd $PyRADS/pyDISORT-master
 - python setup.py install
 
@@ -33,6 +33,7 @@ References:
 
   If the installation failed, the test scripts will return "ImportError: No module named disort".
   If the installation worked, the test scripts will print a large slew of output.
+  If using a separate conda environment, subsequently remember to load that environment before running pyDISORT.
 
 4) Run test scripts
 
