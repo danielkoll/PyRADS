@@ -23,7 +23,7 @@ References:
   Steps marked with (x) use conda to create a separate environment, and are optional.
   
 - (x) conda create --clone base --name base_w_pyDISORT
-- (x) conda activate base_w_pyDISORT
+- (x) source activate base_w_pyDISORT
 - cd $PyRADS/pyDISORT-master
 - python setup.py install
 
@@ -34,7 +34,8 @@ References:
 
   If the installation failed, the test scripts will return "ImportError: No module named disort".
   If the installation worked, the test scripts will print a large slew of output.
-  If using a separate conda environment, subsequently remember to load that environment before running pyDISORT.
+  If using a separate conda environment, later remember to load that environment with 'source activate' before
+  running pyDISORT or importing pyRADS.
 
 4) Run test scripts
 
