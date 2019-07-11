@@ -51,7 +51,7 @@ To compute SW fluxes in W/m2 for a given surface temperature (here, 300 K) over 
 - python compute_sw_h2o.py 1000. 2000. 0.01 300. .
 
 To stitch together the SW fluxes across the entire solar spectrum (takes a while even at low spectral res; see note below):
-- cd $PyRADS/Test03.sw
+- cd $PyRADS/Test04.sw_full_spectrum
 - python compute_sw_h2o.py 1000. 10000. 1. 300. .
 - python compute_sw_h2o.py 10000. 20000. 1. 300. .
 - python compute_sw_h2o.py 20000. 30000. 1. 300. .
