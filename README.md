@@ -3,7 +3,9 @@ PyRADS is the Python line-by-line RADiation model for planetary atmosphereS. PyR
 
 For Earth-like atmospheres, PyRADS currently uses HITRAN 2016 line lists (http://hitran.org/) and the MTCKD continuum model (http://rtweb.aer.com/continuum_frame.html).
 
-Currently, PyRADS is only valid for longwave calculations (no scattering).
+Looking for a version of PyRADS that can deal with shortwave radiation (scattering)?
+https://github.com/ddbkoll/PyRADS-shortwave
+
 
 References:
 
