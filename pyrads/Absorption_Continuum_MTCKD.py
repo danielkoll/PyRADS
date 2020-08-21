@@ -191,7 +191,8 @@ def run_mtckd(p,T,pathlength,vmr_h2o,exe_file,suppress_stdout=True):
 
     ##
     if suppress_stdout:
-        os.system( exe_file + " < " + input_file + " > /dev/null")
+        #os.system( exe_file + " < " + input_file + " > /dev/null")
+        os.system( '"'+exe_file+'"' + " < " + input_file + " > /dev/null")  # add double quotes in case space is in path
     else:
         print( "================================================")
         print( "===   RUN MT_CKD CONTINUUM                   ===")
