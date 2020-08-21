@@ -36,13 +36,28 @@ def get_Tq_moist(p,Ts,ps,params,RH=1.,Tstrat=None):
         # caution: only implements stratosphere if T<Tstrat anywhere
         # this can fail at crappy vertical resolution!
 
-        mask = T_adiabat < Tstrat
+        # ---
+        # v1: pick highest pressure level in strat, assume q is uniform at that value
+        # mask = T_adiabat < Tstrat
+        # T = T_adiabat
+        # T[mask] = Tstrat
+
+        # q = q_adiabat
+        # q[mask] = q_adiabat[p==(p[mask].max())]
+
+        # ---
+        # v2, more accurate: use interpolation to find p_trop, where T=Tstrat. Then compute q at that level.
+        #   Note: at insufficient res, interpolation will produce p_trop=min(p)!
+        p_trop = np.interp(Tstrat,T_adiabat,p)
+        q_trop = get_q(Tstrat,p_trop,params,RH=RH)  # analytically ..
+        mask = p<=p_trop
+
         T = T_adiabat
         T[mask] = Tstrat
-
-        # pick highest pressure level in strat, assume q is uniform at that value
+        
         q = q_adiabat
-        q[mask] = q_adiabat[p==(p[mask].max())]
+        q[mask] = q_trop        
+        
     else:
         T = T_adiabat
         q = q_adiabat
