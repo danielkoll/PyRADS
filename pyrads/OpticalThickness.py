@@ -24,7 +24,7 @@ def compute_tau_H2ON2(p,T,q,grid,params,RH=1.):
         print( "compute kappa at p,T = ",pres,temp)
         kappaH2O = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
                                        "H2O",press=pres,press_self=p_H2O, \
-                                       temp=temp,broadening="air", lineWid=25., \
+                                       temp=temp,broadening="mixed", lineWid=25., \
                                        cutoff_option="fixed",remove_plinth=True)
 
         # add continuum:
@@ -58,13 +58,13 @@ def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.):
         print( "compute kappa at p,T = ",pres,temp)
         kappaH2O = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
                                        "H2O",press=pres,press_self=p_H2O, \
-                                       temp=temp,broadening="air", lineWid=25., \
+                                       temp=temp,broadening="mixed", lineWid=25., \
                                        cutoff_option="fixed",remove_plinth=True)
 
         kappaCO2 = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
                                        "CO2",press=pres,press_self=0., \
                                        temp=temp,broadening="air", lineWid=25., \
-                                       cutoff_option="fixed",remove_plinth=False)
+                                       cutoff_option="fixed",remove_plinth=False)  # use of "air" broadening consistent with trace gas assumption
 
         # add continuum:
         #    here I'm only using kappa from mtckd crosssection file,
@@ -88,13 +88,14 @@ def compute_tau_dryCO2(p,T,q,ppv_CO2,grid,params):
 
     kappa = np.zeros( (grid.Np,grid.Nn) )
     for pres,temp,q_H2O in zip(p,T,q):
+        p_CO2 = pres * ppv_CO2
         R_mean = params.R
         q_CO2 = convert_molar_to_mass_ratio(ppv_CO2,params.R_CO2,R_mean)
 
         print( "compute kappa at p,T = ",pres,temp)
         kappaCO2 = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
-                                       "CO2",press=pres,press_self=0., \
-                                       temp=temp,broadening="air", lineWid=25., \
+                                       "CO2",press=pres,press_self=p_CO2, \
+                                       temp=temp,broadening="mixed", lineWid=25., \
                                        cutoff_option="fixed",remove_plinth=False)  # don't take out plinth!
         kappa[ p==pres,: ] = kappaCO2*q_CO2     # save
     print( "done! \n")
