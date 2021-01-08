@@ -2,6 +2,8 @@ from __future__ import division, print_function
 import numpy as np
 import sys,os
 
+import time
+
 sys.path.append("..")
 import pyrads
 
@@ -67,7 +69,15 @@ g = pyrads.SetupGrids.make_grid( Ts,Tstrat,N_press,wavenr_min,wavenr_max,dwavenr
 
 # compute optical thickness:
 #   -> this is the computationally most intensive step
+start = time.time()
 g.tau = pyrads.OpticalThickness.compute_tau_H2ON2(g.p,g.T,g.q,g,params, RH=params.RH )
+end = time.time()
+print("Elapsed (with compilation) = %s" % (end - start))
+
+start = time.time()
+g.tau = pyrads.OpticalThickness.compute_tau_H2ON2(g.p,g.T,g.q,g,params, RH=params.RH )
+end = time.time()
+print("Elapsed (after compilation) = %s" % (end - start))
 
 # compute Planck functions etc:
 #   -> here: fully spectrally resolved!

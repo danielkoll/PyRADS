@@ -271,7 +271,7 @@ def gen_absGrid(waveGrid):
 def computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,numWidths = 1000.):
     #absGrid = numpy.zeros(len(waveGrid),numpy.Float)
     #absGrid = inputGrid
-    Q = molArr[2]
+    #Q = molArr[2]
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
         #gam = gamList[i]*(p/1.013e5)*(296./T)**TExpList[i]  # DKOLL: old
@@ -313,10 +313,10 @@ def computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,mo
 ###
 ### DKOLL: also allow for option to remove the Lorenz line 'plinth',
 ##         cf. MTCKD continuum references
-@jit(nopython=True)
+#@jit(nopython=True)
 def computeAbsorption_fixedCutoff(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,numWidths=25.,remove_plinth=False):
     #absGrid = numpy.zeros(len(waveGrid),numpy.Float)
-    Q = molArr[2]
+    #Q = molArr[2]
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
         #gam = gamList[i]*(p/1.013e5)*(296./T)**TExpList[i]  # DKOLL: old
@@ -600,7 +600,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
                         cutoff_option="relative",remove_plinth=False):
 
     # ! not a great solution !
-    #global waveStart, waveEnd, dWave, p, T, molName
+    global waveStart, waveEnd, dWave, p, T, molName
     waveStart = wave0
     waveEnd = wave1
     dWave = delta_wave
@@ -638,6 +638,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
     nWidths = lineWid
 
     inputGrid = gen_absGrid(waveGrid)
+    Q = molecules[molName][2]
     if cutoff_option=="relative":
         absGrid = computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,nWidths)
     elif cutoff_option=="fixed":
