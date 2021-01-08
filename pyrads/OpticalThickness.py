@@ -10,6 +10,7 @@ from .Absorption_Crosssections_HITRAN2016 import getKappa_HITRAN
 from . import Absorption_Continuum_MTCKD
 from .Absorption_Continuum_MTCKD import get_H2OContinuum
 from scipy.integrate import cumtrapz
+from numba import jit
 
 from .Thermodynamics import convert_molar_to_mass_ratio
 
@@ -46,7 +47,6 @@ def compute_tau_H2ON2(p,T,q,grid,params,RH=1.):
 # ---
 ## Here: assume CO2 is a minor trace gas!
 ##     (I'm using params.R to compute R_mean, so ignoring mass contribution of CO2)
-
 def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.):
 
     kappa = np.zeros( (grid.Np,grid.Nn) )
