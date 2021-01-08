@@ -255,6 +255,10 @@ def plotLogHisto(waveRange,data,nBins=10):
     c.addCurve(hist)
     return c
 
+def gen_absGrid(waveGrid):
+    absGrid = numpy.zeros(len(waveGrid),numpy.Float)
+    return absGrid
+
 #Computes the absorption spectrum on a wave grid, by summing up
 #contributions from each line.  numWidths is the number
 #of line widths after which the line contribution is cut off.
@@ -263,9 +267,11 @@ def plotLogHisto(waveRange,data,nBins=10):
 #The validity of the Lorentz shape at such large cutoffs is dubious.
 #At The cutoff can affect the absorption significantly in the
 #water vapor or CO2 window, or "continuum" regions
-def computeAbsorption(waveGrid,getGamma,p,T,dWave,numWidths = 1000.):
-    absGrid = numpy.zeros(len(waveGrid),numpy.Float)
-
+@jit(nopython=True)
+def computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,numWidths = 1000.):
+    #absGrid = numpy.zeros(len(waveGrid),numpy.Float)
+    #absGrid = inputGrid
+    Q = molArr[2]
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
         #gam = gamList[i]*(p/1.013e5)*(296./T)**TExpList[i]  # DKOLL: old
@@ -296,9 +302,10 @@ def computeAbsorption(waveGrid,getGamma,p,T,dWave,numWidths = 1000.):
         if i2>0:
             dn = numpy.arange(i1-iw,i2-iw)*dWave
             abs = S*gam/(math.pi*( dn**2 + gam**2))
-            absGrid[i1:i2] += abs
-    return absGrid
-
+            #absGrid[i1:i2] += abs
+            inputGrid[i1:i2] += abs
+    #return absGrid
+    return inputGrid
 
 ### DKOLL: add option to have a fixed cutoff.
 ###        i.e., truncate line at N cm^-1 away from center instead of N halfwidths
@@ -306,9 +313,10 @@ def computeAbsorption(waveGrid,getGamma,p,T,dWave,numWidths = 1000.):
 ###
 ### DKOLL: also allow for option to remove the Lorenz line 'plinth',
 ##         cf. MTCKD continuum references
-def computeAbsorption_fixedCutoff(waveGrid,getGamma,p,T,dWave,numWidths=25.,remove_plinth=False):
-    absGrid = numpy.zeros(len(waveGrid),numpy.Float)
-
+@jit(nopython=True)
+def computeAbsorption_fixedCutoff(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,numWidths=25.,remove_plinth=False):
+    #absGrid = numpy.zeros(len(waveGrid),numpy.Float)
+    Q = molArr[2]
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
         #gam = gamList[i]*(p/1.013e5)*(296./T)**TExpList[i]  # DKOLL: old
@@ -341,13 +349,16 @@ def computeAbsorption_fixedCutoff(waveGrid,getGamma,p,T,dWave,numWidths=25.,remo
         if (i2>0) and (remove_plinth==False):
             dn = numpy.arange(i1-iw,i2-iw)*dWave
             abs = S*gam/(math.pi*( dn**2 + gam**2))
-            absGrid[i1:i2] += abs
+            #absGrid[i1:i2] += abs
+            inputGrid[i1:i2] += abs
         # DKOLL: new
         elif (i2>0) and (remove_plinth==True):
             dn = numpy.arange(i1-iw,i2-iw)*dWave
             abs = S*gam/math.pi * (1./(dn**2 + gam**2) - 1./(numWidths**2 + gam**2) )
-            absGrid[i1:i2] += abs
-    return absGrid
+            #absGrid[i1:i2] += abs
+            inputGrid[i1:i2] += abs
+    #return absGrid
+    return inputGrid
 
 
 #Function to  to compute absorption coefficient
@@ -582,23 +593,24 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
 
 
 #Standard wavenumbers used for spectral survey
-@jit(nopython=False)
+#@jit(nopython=False)
 def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
                         press=1e4,temp=300.,lineWid=1000.,broadening="air", \
                         press_self=None, \
                         cutoff_option="relative",remove_plinth=False):
 
     # ! not a great solution !
-    global waveStart, waveEnd, dWave, p, T, molName
+    #global waveStart, waveEnd, dWave, p, T, molName
     waveStart = wave0
     waveEnd = wave1
     dWave = delta_wave
     molName = molecule_name
+    molArr = molecules[molName]
 
     p = float(press) # DKOLL: make sure (p,T) are floats!
     T = float(temp)
 
-    loadSpectralLines(molName,minWave=wave0,maxWave=wave1)
+    Q = loadSpectralLines(molName,minWave=wave0,maxWave=wave1)
 
 #-->Decide whether you want to compute air-broadened
 #or self-broadened absorption. The plots of self/air
@@ -625,9 +637,10 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
 #I have been using 1000 widths as my standard value.
     nWidths = lineWid
 
+    inputGrid = gen_absGrid(waveGrid)
     if cutoff_option=="relative":
-        absGrid = computeAbsorption(waveGrid,getGamma,p,T,dWave,nWidths)
+        absGrid = computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,nWidths)
     elif cutoff_option=="fixed":
-        absGrid = computeAbsorption_fixedCutoff(waveGrid,getGamma,p,T,dWave,nWidths,remove_plinth=remove_plinth)
+        absGrid = computeAbsorption_fixedCutoff(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,nWidths,remove_plinth=remove_plinth)
 
     return absGrid
