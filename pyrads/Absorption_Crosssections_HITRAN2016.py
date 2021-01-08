@@ -84,7 +84,7 @@ from .ClimateUtilities import *
 from . import phys
 import os
 
-from numba import jit
+from numba import jit, generated_jit
 
 #Path to the datasets
 datapath = '/'.join( os.path.abspath(__file__).split('/')[:-2] ) + '/DATA/HITRAN_DATA/'
@@ -256,7 +256,7 @@ def plotLogHisto(waveRange,data,nBins=10):
     return c
 
 def gen_absGrid(waveGrid):
-    absGrid = numpy.zeros(len(waveGrid),numpy.Float)
+    absGrid = numpy.zeros(len(waveGrid))
     return absGrid
 
 #Computes the absorption spectrum on a wave grid, by summing up
@@ -313,12 +313,25 @@ def computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,mo
 ###
 ### DKOLL: also allow for option to remove the Lorenz line 'plinth',
 ##         cf. MTCKD continuum references
-#@jit(nopython=True)
-def computeAbsorption_fixedCutoff(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,numWidths=25.,remove_plinth=False):
+@generated_jit(nopython=True)
+def computeAbsorption_fixedCutoff(inputGrid,broadening,press_self,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,Q,numWidths=25.,remove_plinth=False):
     #absGrid = numpy.zeros(len(waveGrid),numpy.Float)
-    #Q = molArr[2]
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
+
+        p_tot  = float(p)/float(1.013e5)              # need [atm]!
+        p_self = press_self/1.013e5
+        p_air  = (p-press_self)/1.013e5
+        if broadening=="air":
+            getGamma = lambda i: gamAirList[i]*p_tot
+        elif broadening=="self":
+            getGamma = lambda i: gamSelfList[i]*p_tot
+        elif broadening=="mixed":
+            # see HITRAN documentation.
+            #   e.g., http://hitran.org/docs/definitions-and-units/
+            if press_self==None:
+                press_self = p
+            getGamma = lambda i: gamAirList[i]*p_air + gamSelfList[i]*p_self
         #gam = gamList[i]*(p/1.013e5)*(296./T)**TExpList[i]  # DKOLL: old
         gam = getGamma(i)*(296./T)**TExpList[i]              # DKOLL: new. getGamma includes p-scaling
         #Temperature scaling of line strength
@@ -499,7 +512,7 @@ def smooth(wAvg,data):
 #        if you're outside region, break, skip rest of file.
 #        for this to work, make use of fact that line lists are ordered
 def loadSpectralLines(molName,minWave=None,maxWave=None):
-    global waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,Q
+    global waveList,sList,gamAirList,gamSelfList,ElowList,TExpList#,Q
     molNum = molecules[molName][0]
     Q = molecules[molName][2] #Partition function for this molecule
     if molNum < 10:
@@ -580,6 +593,7 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
     ElowList =  numpy.array(ElowList)
     TExpList = numpy.array(TExpList)
     f.close()
+    return Q
 
 
 #====================================================================
@@ -593,7 +607,7 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
 
 
 #Standard wavenumbers used for spectral survey
-#@jit(nopython=False)
+
 def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
                         press=1e4,temp=300.,lineWid=1000.,broadening="air", \
                         press_self=None, \
@@ -640,8 +654,8 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
     inputGrid = gen_absGrid(waveGrid)
     Q = molecules[molName][2]
     if cutoff_option=="relative":
-        absGrid = computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,nWidths)
+        absGrid = computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,Q,nWidths)
     elif cutoff_option=="fixed":
-        absGrid = computeAbsorption_fixedCutoff(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,molArr,nWidths,remove_plinth=remove_plinth)
+        absGrid = computeAbsorption_fixedCutoff(inputGrid,broadening,press_self,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,Q,nWidths,remove_plinth=remove_plinth)
 
     return absGrid
