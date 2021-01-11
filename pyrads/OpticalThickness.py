@@ -16,17 +16,26 @@ from .Thermodynamics import convert_molar_to_mass_ratio
 
 # ---
 ##
-def compute_tau_H2ON2(p,T,q,grid,params,RH=1.):
+def compute_tau_H2ON2(p,T,q,grid,params,RH=1.,use_numba=False):
 
     kappa = np.zeros( (grid.Np,grid.Nn) )
     for pres,temp,q_H2O in zip(p,T,q):
         p_H2O = RH * params.esat(temp)  # ...
 
         print( "compute kappa at p,T = ",pres,temp)
-        kappaH2O = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
-                                       "H2O",press=pres,press_self=p_H2O, \
-                                       temp=temp,broadening="mixed", lineWid=25., \
-                                       cutoff_option="fixed",remove_plinth=True)
+
+        if use_numba:
+
+            from .Absorption_Crosssections_HITRAN2016_numba import getKappa_HITRAN_numba
+            kappaH2O = getKappa_HITRAN_numba(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "H2O",press=pres,press_self=p_H2O, \
+                                           temp=temp,broadening="mixed", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=True)
+        else:
+            kappaH2O = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "H2O",press=pres,press_self=p_H2O, \
+                                           temp=temp,broadening="mixed", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=True)
 
         # add continuum:
         #    here I'm only using kappa from mtckd crosssection file,
@@ -47,7 +56,7 @@ def compute_tau_H2ON2(p,T,q,grid,params,RH=1.):
 # ---
 ## Here: assume CO2 is a minor trace gas!
 ##     (I'm using params.R to compute R_mean, so ignoring mass contribution of CO2)
-def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.):
+def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.,use_numba=False):
 
     kappa = np.zeros( (grid.Np,grid.Nn) )
     kappa_h2o = np.zeros( (grid.Np,grid.Nn) )
@@ -57,16 +66,31 @@ def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.):
         R_mean = q_H2O*params.Rv + (1.-q_H2O)*params.R
         q_CO2 = convert_molar_to_mass_ratio(ppv_CO2,params.R_CO2,R_mean)
 
-        print( "compute kappa at p,T = ",pres,temp)
-        kappaH2O = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
-                                       "H2O",press=pres,press_self=p_H2O, \
-                                       temp=temp,broadening="mixed", lineWid=25., \
-                                       cutoff_option="fixed",remove_plinth=True)
 
-        kappaCO2 = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
-                                       "CO2",press=pres,press_self=0., \
-                                       temp=temp,broadening="air", lineWid=25., \
-                                       cutoff_option="fixed",remove_plinth=False)  # use of "air" broadening consistent with trace gas assumption
+        print( "compute kappa at p,T = ",pres,temp)
+        if use_numba:
+            from .Absorption_Crosssections_HITRAN2016_numba import getKappa_HITRAN_numba
+
+            kappaH2O = getKappa_HITRAN_numba(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "H2O",press=pres,press_self=p_H2O, \
+                                           temp=temp,broadening="mixed", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=True)
+
+            kappaCO2 = getKappa_HITRAN_numba(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "CO2",press=pres,press_self=0., \
+                                           temp=temp,broadening="air", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=False)  # use of "air" broadening consistent with trace gas assumption
+
+        else:
+            kappaH2O = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "H2O",press=pres,press_self=p_H2O, \
+                                           temp=temp,broadening="mixed", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=True)
+
+            kappaCO2 = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "CO2",press=pres,press_self=0., \
+                                           temp=temp,broadening="air", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=False)  # use of "air" broadening consistent with trace gas assumption
 
         # add continuum:
         #    here I'm only using kappa from mtckd crosssection file,
@@ -89,7 +113,7 @@ def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.):
 
 # ---
 ##  HERE: dry atmosphere, CO2 only
-def compute_tau_dryCO2(p,T,q,ppv_CO2,grid,params):
+def compute_tau_dryCO2(p,T,q,ppv_CO2,grid,params,use_numba=False):
 
     kappa = np.zeros( (grid.Np,grid.Nn) )
     for pres,temp,q_H2O in zip(p,T,q):
@@ -98,10 +122,20 @@ def compute_tau_dryCO2(p,T,q,ppv_CO2,grid,params):
         q_CO2 = convert_molar_to_mass_ratio(ppv_CO2,params.R_CO2,R_mean)
 
         print( "compute kappa at p,T = ",pres,temp)
-        kappaCO2 = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
-                                       "CO2",press=pres,press_self=p_CO2, \
-                                       temp=temp,broadening="mixed", lineWid=25., \
-                                       cutoff_option="fixed",remove_plinth=False)  # don't take out plinth!
+        if use_numba:
+            from .Absorption_Crosssections_HITRAN2016_numba import getKappa_HITRAN_numba
+
+            kappaCO2 = getKappa_HITRAN_numba(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "CO2",press=pres,press_self=p_CO2, \
+                                           temp=temp,broadening="mixed", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=False)  # don't take out plinth!
+
+        else:
+            kappaCO2 = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
+                                           "CO2",press=pres,press_self=p_CO2, \
+                                           temp=temp,broadening="mixed", lineWid=25., \
+                                           cutoff_option="fixed",remove_plinth=False)  # don't take out plinth!
+
         kappa[ p==pres,: ] = kappaCO2*q_CO2     # save
     print( "done! \n")
 
