@@ -84,7 +84,7 @@ from .ClimateUtilities import *
 from . import phys
 import os
 
-from numba import jit, generated_jit
+from numba import jit
 
 #Path to the datasets
 datapath = '/'.join( os.path.abspath(__file__).split('/')[:-2] ) + '/DATA/HITRAN_DATA/'
@@ -613,10 +613,10 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
 
 #Standard wavenumbers used for spectral survey
 
-def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
-                        press=1e4,temp=300.,lineWid=1000.,broadening="air", \
-                        press_self=None, \
-                        cutoff_option="relative",remove_plinth=False):
+def getKappa_HITRAN_numba(waveGrid,wave0,wave1,delta_wave,molecule_name,\
+                          press=1e4,temp=300.,lineWid=1000.,broadening="air", \
+                          press_self=None, \
+                          cutoff_option="relative",remove_plinth=False):
 
     # ! not a great solution !
     global waveStart, waveEnd, dWave, p, T, molName
