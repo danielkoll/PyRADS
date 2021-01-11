@@ -114,8 +114,11 @@ TExp = 8
 #These are used in the temperature scaling of line strength.
 #The generic partition functions are OK up to about 500K
 #(somewhat less for CO2)
+@jit()
 def QGenericLin(T): #Approx. for linear molecules like CO2
     return T
+
+@jit()
 def QGenericNonLin(T): #Approx for nonlinear molecules like H2O
     return T**1.5
 #**ToDo: Provide actual partition functions for CO2, H2O and CH4
@@ -313,27 +316,31 @@ def computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,mo
 ###
 ### DKOLL: also allow for option to remove the Lorenz line 'plinth',
 ##         cf. MTCKD continuum references
-@generated_jit(nopython=True)
-def computeAbsorption_fixedCutoff(inputGrid,broadening,press_self,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,Q,numWidths=25.,remove_plinth=False):
+#@generated_jit(nopython=True)
+@jit(nopython=True)
+def computeAbsorption_fixedCutoff(inputGrid,broadening,press_self,waveGrid,p,T,dWave,waveStart,waveEnd,Q,numWidths=25.,remove_plinth=False):
     #absGrid = numpy.zeros(len(waveGrid),numpy.Float)
+    p_tot  = p/1.013e5             # need [atm]!
+    p_self = press_self/1.013e5
+    p_air  = (p-press_self)/1.013e5
+
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
-
-        p_tot  = float(p)/float(1.013e5)              # need [atm]!
-        p_self = press_self/1.013e5
-        p_air  = (p-press_self)/1.013e5
         if broadening=="air":
-            getGamma = lambda i: gamAirList[i]*p_tot
+            gam = gamAirList[i]*p_tot*(296./T)**TExpList[i]
+
         elif broadening=="self":
-            getGamma = lambda i: gamSelfList[i]*p_tot
+            gam = gamSelfList[i]*p_tot*(296./T)**TExpList[i]
+
         elif broadening=="mixed":
             # see HITRAN documentation.
             #   e.g., http://hitran.org/docs/definitions-and-units/
             if press_self==None:
                 press_self = p
-            getGamma = lambda i: gamAirList[i]*p_air + gamSelfList[i]*p_self
-        #gam = gamList[i]*(p/1.013e5)*(296./T)**TExpList[i]  # DKOLL: old
-        gam = getGamma(i)*(296./T)**TExpList[i]              # DKOLL: new. getGamma includes p-scaling
+            gam = (gamAirList[i]*p_air + gamSelfList[i]*p_self)*(296./T)**TExpList[i]
+
+        #gam = getGamma(i)*(296./T)**TExpList[i]              # DKOLL: new. getGamma includes p-scaling
+
         #Temperature scaling of line strength
         Tfact = math.exp(-100.*(phys.h*phys.c/phys.k)*ElowList[i]*(1/T-1/296.))
         #The following factor is usually pretty close to unity
@@ -368,9 +375,7 @@ def computeAbsorption_fixedCutoff(inputGrid,broadening,press_self,waveGrid,getGa
         elif (i2>0) and (remove_plinth==True):
             dn = numpy.arange(i1-iw,i2-iw)*dWave
             abs = S*gam/math.pi * (1./(dn**2 + gam**2) - 1./(numWidths**2 + gam**2) )
-            #absGrid[i1:i2] += abs
             inputGrid[i1:i2] += abs
-    #return absGrid
     return inputGrid
 
 
@@ -630,6 +635,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
 #or self-broadened absorption. The plots of self/air
 #ratio in the book were done by running this script for
 #each choice and computing the ratio of the absorption coefficients
+    """
     p_tot  = press/1.013e5              # need [atm]!
     p_self = press_self/1.013e5
     p_air  = (press-press_self)/1.013e5
@@ -643,7 +649,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
         if press_self==None:
             press_self = press
         getGamma = lambda i: gamAirList[i]*p_air + gamSelfList[i]*p_self
-
+    """
 #-->Compute the absorption on the wavenumber grid
 #Set nWidths to the number of line widths to go out to in
 #superposing spectral lines to compute the absorption coefficient.
@@ -656,6 +662,5 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave,molecule_name,\
     if cutoff_option=="relative":
         absGrid = computeAbsorption(inputGrid,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,Q,nWidths)
     elif cutoff_option=="fixed":
-        absGrid = computeAbsorption_fixedCutoff(inputGrid,broadening,press_self,waveGrid,getGamma,p,T,dWave,waveStart,waveEnd,Q,nWidths,remove_plinth=remove_plinth)
-
+        absGrid = computeAbsorption_fixedCutoff(inputGrid,broadening,press_self,waveGrid,p,T,dWave,waveStart,waveEnd,Q,nWidths,remove_plinth=remove_plinth)
     return absGrid
