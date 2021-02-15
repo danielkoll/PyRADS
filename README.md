@@ -41,7 +41,7 @@ NOTE: resolution in test scripts was chosen for relative speed, not accuracy. Fo
 
 
 # Requirements
-Python 2 or 3 with numpy and scipy.
+Python 3 with numpy and scipy.
 
 For the MTCKD continuum model: gmake and gfortran.
 
