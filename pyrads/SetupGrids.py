@@ -37,8 +37,8 @@ def make_grid( Ts,Tstrat,N_press,wavenr_min,wavenr_max,dwavenr,params, \
     # start filling arrays: compute p,T,q profiles
     #  -> careful about starting pressure!
     #  -> note: stratosphere only used for a full moist adiabat!
-
     grid.p = np.logspace( pTOA_decade,0,endpoint=True,num=grid.Np ) * grid.ps  # 1d [Pa]
+
     if adiabat=="full":
         grid.T,grid.q = VerticalStructure.get_Tq_moist(grid.p,Ts,grid.ps,params,Tstrat=Tstrat,RH=RH)
     elif adiabat=="dry":
