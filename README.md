@@ -14,12 +14,19 @@ References:
 # Installation
 1) Download to your own computer.
 
-2) Manually compile the MTCKD model:
+2) [optional] Install the required libraries using conda:
+- cd $PyRADS
+- conda env create -f environment.yml
+- conda activate pyrads
+
+  NOTE: don't forget to type ``conda activate pyrads'' each time before using PyRADS.
+
+3) Manually compile the MTCKD model:
 - cd $PyRADS/DATA/MT_CKD_continuum/cntnm.H2O_N2/build
 - (on a Mac) make -f make_cntnm osxGNUdbl
 - (on a Mac if you are using gfortran installed with conda) make -f make_cntnm osxGNUCONDAdbl
 
-3) Run test scripts
+4) Run test scripts
 
 To compute outgoing longwave radiation (OLR) in W/m2 for a given surface temperature:
 - cd $PyRADS/Test01.olr
