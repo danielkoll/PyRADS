@@ -1,0 +1,11 @@
+name: pyrads
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - matplotlib
+  - numba
+  - numpy
+  - pip
+  - scipy
+  - gfortran_osx-64
