@@ -1,7 +1,8 @@
 from setuptools import setup
 
 dependencies = ["numpy",
-                "scipy"]
+                "scipy",
+                "numba"]
 
 def readme():
     with open('README.md') as f:
