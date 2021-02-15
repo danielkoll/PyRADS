@@ -23,8 +23,8 @@ References:
 
 3) Manually compile the MTCKD model:
 - cd $PyRADS/DATA/MT_CKD_continuum/cntnm.H2O_N2/build
-- (on a Mac) make -f make_cntnm osxGNUdbl
 - (on a Mac if you are using gfortran installed with conda) make -f make_cntnm osxGNUCONDAdbl
+- (on a Mac otherwise) make -f make_cntnm osxGNUdbl
 
 4) Run test scripts
 
