@@ -42,7 +42,7 @@ NOTES:
 
 # Requirements
 Python 3 with numpy and scipy.
-
+For faster calculations: numba.
 For the MTCKD continuum model: gmake and gfortran.
 
 # Acknowledgements
