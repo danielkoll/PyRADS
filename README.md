@@ -19,8 +19,6 @@ References:
 - conda env create -f environment.yml
 - conda activate pyrads
 
-  NOTE: don't forget to type ``conda activate pyrads'' each time before using PyRADS.
-
 3) Manually compile the MTCKD model:
 - cd $PyRADS/DATA/MT_CKD_continuum/cntnm.H2O_N2/build
 - (on a Mac if you are using gfortran installed with conda) make -f make_cntnm osxGNUCONDAdbl
@@ -37,8 +35,10 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - python compute_olr_h2o.01.100RH.py
 
 
-NOTE: resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
-
+NOTES:
+- Resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
+- 'environment.yml' assumes you're using a Mac. For Linux, change the gfortran compiler.
+- If you're using conda, don't forget to type ``conda activate pyrads'' each time before using PyRADS.
 
 # Requirements
 Python 3 with numpy and scipy.
