@@ -58,8 +58,8 @@ from __future__ import division, print_function, absolute_import
 #
 #---------------------------------------------------------
 
-import string,math
-from .ClimateUtilities import *
+import math
+import numpy
 from . import phys
 import os
 
