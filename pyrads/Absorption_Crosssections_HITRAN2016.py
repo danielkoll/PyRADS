@@ -85,17 +85,22 @@ airWidth =  5
 selfWidth = 6
 Elow = 7
 TExp = 8
-#
-#
-#Total internal partition functions (or generic approximations).
-#These are used in the temperature scaling of line strength.
-#The generic partition functions are OK up to about 500K
-#(somewhat less for CO2)
-def QGenericLin(T): #Approx. for linear molecules like CO2
-    return T
-def QGenericNonLin(T): #Approx for nonlinear molecules like H2O
-    return T**1.5
-#**ToDo: Provide actual partition functions for CO2, H2O and CH4
+
+
+def QGenericPowerLaw(T,power):
+    """
+    Total internal partition functions (or generic approximations).
+    These are used in the temperature scaling of line strength.
+    The generic partition functions are OK up to about 500K
+    (somewhat less for CO2)
+    
+    power = 1: approximately correct for CO2
+    power = 1.5: approximately correct for nonlinear molecules like H2O
+    
+    ToDo: Provide actual partition functions for CO2, H2O and CH4
+    """
+    return T**(power)
+
 
 """
 Molecule numbers and molecular weights
@@ -108,18 +113,18 @@ molecule number (see documentation) and
 corresponding molecular weight.
 """
 molecules = {} #Start an empty dictionary
-molecules['H2O'] = [1,18.,QGenericNonLin] #Entry is [molecule number,mol wt,partition fn]
-molecules['CO2'] = [2,44.,QGenericLin]
-molecules['O3']  = [3,48.,QGenericNonLin]
-molecules['N2O'] = [4,44.,QGenericLin]
+molecules['H2O'] = [1,18.,1.5] #Entry is [molecule number,mol wt,partition fn]
+molecules['CO2'] = [2,44.,1.]
+molecules['O3']  = [3,48.,1.5]
+molecules['N2O'] = [4,44.,1.]
 
-molecules['CH4'] = [6,16.,QGenericNonLin]
-molecules['NH3'] = [11,17.,QGenericNonLin] # linear structure?
+molecules['CH4'] = [6,16.,1.5]
+molecules['NH3'] = [11,17.,1.5] # linear structure?
 
-molecules['HCN'] = [23,27.,QGenericNonLin]
-molecules['C2H6'] = [27,30.,QGenericNonLin]
+molecules['HCN'] = [23,27.,1.5]
+molecules['C2H6'] = [27,30.,1.5]
 
-molecules['SF6'] = [30,146.,QGenericNonLin]  # careful: old file!
+molecules['SF6'] = [30,146.,1.5]  # careful: old file!
 
 #-----------------------------------------------
 
@@ -131,7 +136,7 @@ def Planck(wavenum,T):
 def computeAbsorption(waveGrid,waveStart,waveEnd,
                       hitran_data,getGamma,
                       p,T,dWave,
-                      numWidths = 1000.):
+                      nWidths = 1000.):
     """
     Computes the absorption spectrum on a wave grid, by summing up
     contributions from each line.  numWidths is the number
@@ -143,7 +148,7 @@ def computeAbsorption(waveGrid,waveStart,waveEnd,
     water vapor or CO2 window, or "continuum" regions
     """
     absGrid = numpy.zeros(len(waveGrid))
-    waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,Q = hitran_data
+    waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,QExponent = hitran_data
     
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
@@ -155,10 +160,10 @@ def computeAbsorption(waveGrid,waveStart,waveEnd,
         Tfact1 = (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/T))/ \
               (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/296.))
 
-        S = sList[i]*(Q(296.)/Q(T))*Tfact*Tfact1
+        S = sList[i] * (QGenericPowerLaw(296,QExponent)/QGenericPowerLaw(T,QExponent)) * Tfact*Tfact1
         
         iw = int(len(waveGrid)*(n-waveStart)/(waveEnd-waveStart))
-        nsum = int(numWidths*gam/dWave)
+        nsum = int(nWidths*gam/dWave)
         i1 = max(0,iw-nsum)
         i2 = min(len(waveGrid)-1,iw+nsum)
         if i2>0:
@@ -171,7 +176,7 @@ def computeAbsorption(waveGrid,waveStart,waveEnd,
 def computeAbsorption_fixedCutoff(waveGrid,waveStart,waveEnd,
                                   hitran_data,getGamma,
                                   p,T,dWave,
-                                  numWidths=25.,remove_plinth=False):
+                                  nWidths=25.,remove_plinth=False):
     """
     DKOLL: add option to have a fixed cutoff.
         i.e., truncate line at N cm^-1 away from center instead of N halfwidths
@@ -181,7 +186,7 @@ def computeAbsorption_fixedCutoff(waveGrid,waveStart,waveEnd,
         cf. MTCKD continuum references
     """
     absGrid = numpy.zeros(len(waveGrid))
-    waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,Q = hitran_data
+    waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,QExponent = hitran_data
 
     for i in range(len(waveList)):
         n = waveList[i] # Wavenumber of the line
@@ -192,10 +197,10 @@ def computeAbsorption_fixedCutoff(waveGrid,waveStart,waveEnd,
         Tfact1 = (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/T))/ \
               (1.- math.exp(-100.*(phys.h*phys.c/phys.k)*n/296.))
         
-        S = sList[i]*(Q(296.)/Q(T))*Tfact*Tfact1
+        S = sList[i]*(QGenericPowerLaw(296,QExponent)/QGenericPowerLaw(T,QExponent))*Tfact*Tfact1
         
         iw = int(len(waveGrid)*(n-waveStart)/(waveEnd-waveStart))
-        nsum = int( numWidths/dWave )  
+        nsum = int( nWidths/dWave )  
         i1 = max(0,iw-nsum)
         i2 = min(len(waveGrid)-1,iw+nsum)
         # DKOLL: old
@@ -206,7 +211,7 @@ def computeAbsorption_fixedCutoff(waveGrid,waveStart,waveEnd,
         # DKOLL: new
         elif (i2>0) and (remove_plinth==True):
             dn = numpy.arange(i1-iw,i2-iw)*dWave
-            abs = S*gam/math.pi * (1./(dn**2 + gam**2) - 1./(numWidths**2 + gam**2) )
+            abs = S*gam/math.pi * (1./(dn**2 + gam**2) - 1./(nWidths**2 + gam**2) )
             absGrid[i1:i2] += abs
     return absGrid
 
@@ -241,7 +246,7 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
     """
     
     molNum = molecules[molName][0]
-    Q = molecules[molName][2] #Partition function for this molecule
+    QExponent = molecules[molName][2] # Exponent for this molecule's partition function
     if molNum < 10:
         file = hitranPath+'0%d_hit16.par'%molNum
     elif molNum == 30:
@@ -317,7 +322,7 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
     TExpList = numpy.array(TExpList)
     f.close()
     
-    hitran_lists = [waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,Q]
+    hitran_lists = [waveList,sList,gamAirList,gamSelfList,ElowList,TExpList,QExponent]
     return hitran_lists
 
 
@@ -326,15 +331,10 @@ def loadSpectralLines(molName,minWave=None,maxWave=None):
 #====================================================================
 
 
-def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave, \
+def getKappa_HITRAN(waveGrid,waveStart,waveEnd,dWave, \
                     press=1e4,temp=300.,lineWid=1000.,broadening="mixed", \
-                    press_self=None, molecule_name=None, hitran_data=None, \
+                    press_self=None, molName=None, hitran_data=None, \
                     cutoff_option="relative",remove_plinth=False):
-
-    waveStart = wave0
-    waveEnd = wave1
-    dWave = delta_wave
-    molName = molecule_name
 
     p = float(press) # DKOLL: make sure (p,T) are floats!
     T = float(temp)
@@ -342,12 +342,11 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave, \
     # Only run loadSpectralLines if necessary
     if (molName is not None) and (hitran_data is None):
         print("Running loadSpectralLines...")
-        hitran_data = loadSpectralLines(molName,minWave=wave0,maxWave=wave1)
+        hitran_data = loadSpectralLines(molName,minWave=waveStart,maxWave=waveEnd)
+        
     
     #-->Decide whether you want to compute air-broadened
-    #or self-broadened absorption. The plots of self/air
-    #ratio in the book were done by running this script for
-    #each choice and computing the ratio of the absorption coefficients
+    #or self-broadened absorption.
     gamAirList,gamSelfList = hitran_data[2], hitran_data[3]
     
     p_tot  = press/1.013e5              # need [atm]!
@@ -363,6 +362,7 @@ def getKappa_HITRAN(waveGrid,wave0,wave1,delta_wave, \
         if press_self==None:
             press_self = press
         getGamma = lambda i: gamAirList[i]*p_air + gamSelfList[i]*p_self
+        
 
     #-->Compute the absorption on the wavenumber grid
     #Set nWidths to the number of line widths to go out to in
