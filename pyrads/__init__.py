@@ -9,5 +9,4 @@ from . import Planck
 from . import SetupGrids
 from . import Thermodynamics
 from . import VerticalStructure
-from . import object_helpers
 from . import phys
