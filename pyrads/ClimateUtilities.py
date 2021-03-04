@@ -75,7 +75,7 @@ except:
 #to be run without the user needing to explicitly comment out
 #the plot calls in the Chapter Scripts.
 #------------------------------------------------------
-
+"""
 try:
     from .ClimateGraphicsMPL import * #Try importing MatPlotLib
 #    from ClimateGraphics import * #Try importing Ngl driver
@@ -96,7 +96,7 @@ except:
         print( "and then plot the data using the graphics program")
         print( "of your choice.")
         from .DummyGraphics import *
-
+"""
 #Section 1: -----Data handling utilities-------------------------------
 
 # ToDo: Put documentation on use of Curve object here!

@@ -6,7 +6,7 @@ optical thicknesses.
 '''
 from __future__ import division, print_function, absolute_import
 import numpy as np
-from .Absorption_Crosssections_HITRAN2016 import getKappa_HITRAN
+from .Absorption_Crosssections_HITRAN2016 import getKappa_HITRAN, loadSpectralLines
 from . import Absorption_Continuum_MTCKD
 from .Absorption_Continuum_MTCKD import get_H2OContinuum
 from scipy.integrate import cumtrapz
@@ -19,6 +19,9 @@ from .Thermodynamics import convert_molar_to_mass_ratio
 def compute_tau_H2ON2(p,T,q,grid,params,RH=1.,use_numba=False):
 
     kappa = np.zeros( (grid.Np,grid.Nn) )
+    
+    hitran_data = loadSpectralLines("H2O",minWave=grid.n0,maxWave=grid.n1)
+    
     for pres,temp,q_H2O in zip(p,T,q):
         p_H2O = RH * params.esat(temp)  # ...
 
@@ -33,7 +36,7 @@ def compute_tau_H2ON2(p,T,q,grid,params,RH=1.,use_numba=False):
                                            cutoff_option="fixed",remove_plinth=True)
         else:
             kappaH2O = getKappa_HITRAN(grid.n,grid.n0,grid.n1,grid.dn, \
-                                           "H2O",press=pres,press_self=p_H2O, \
+                                           "H2O",hitran_data,press=pres,press_self=p_H2O, \
                                            temp=temp,broadening="mixed", lineWid=25., \
                                            cutoff_option="fixed",remove_plinth=True)
 
