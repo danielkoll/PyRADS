@@ -369,11 +369,10 @@ def getKappa_HITRAN(waveGrid,waveStart,waveEnd,dWave, \
     #superposing spectral lines to compute the absorption coefficient.
     #This is a very crude implementation of the far-tail cutoff.
     #I have been using 1000 widths as my standard value.
-    nWidths = lineWid
 
     if cutoff_option=="relative":
-        absGrid = computeAbsorption(waveGrid,waveStart,waveEnd,hitran_data,getGamma,p,T,dWave,nWidths)
+        absGrid = computeAbsorption(waveGrid,waveStart,waveEnd,hitran_data,getGamma,p,T,dWave,nWidths= lineWid)
     elif cutoff_option=="fixed":
-        absGrid = computeAbsorption_fixedCutoff(waveGrid,waveStart,waveEnd,hitran_data,getGamma,p,T,dWave,nWidths,remove_plinth=remove_plinth)
+        absGrid = computeAbsorption_fixedCutoff(waveGrid,waveStart,waveEnd,hitran_data,getGamma,p,T,dWave,nWidths= lineWid,remove_plinth=remove_plinth)
 
     return absGrid
