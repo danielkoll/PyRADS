@@ -39,6 +39,7 @@ NOTES:
 - Resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
 - 'environment.yml' assumes you're using a Mac. For Linux, change the gfortran compiler.
 - If you're using conda, don't forget to type ``conda activate pyrads'' each time before using PyRADS.
+- The current version of PyRADS has a silent bug when using numba + computing line crosssections for multiple species (e.g., H2O + CO2 lines). By default numba is currently disabled until the bug is fixed. Until then don't use PyRADS + numba without additional validation.
 
 # Requirements
 Python 3 with numpy and scipy.
