@@ -1,6 +1,5 @@
 from __future__ import division, print_function, absolute_import
 import numpy as np
-from . import phys
 
 from .Planck import Planck_n
 
