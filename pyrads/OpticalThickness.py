@@ -23,7 +23,7 @@ from .Thermodynamics import convert_molar_to_mass_ratio
 
 # ---
 ##
-def compute_tau_H2ON2(p,T,q,grid,params,RH=1.,use_numba=False,lineShape="voigt"):
+def compute_tau_H2ON2(p,T,q,grid,params,RH=1.,use_numba=False,lineShape="lorentz"):
     # setup fn wrapper:   all these fns need to accept exact same args
     if use_numba:
         from .Absorption_Crosssections_HITRAN2016_numba import getKappa_HITRAN_numba
@@ -66,7 +66,7 @@ def compute_tau_H2ON2(p,T,q,grid,params,RH=1.,use_numba=False,lineShape="voigt")
 # ---
 ## Here: assume CO2 is a minor trace gas!
 ##     (I'm using params.R to compute R_mean, so ignoring mass contribution of CO2)
-def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.,use_numba=False,lineShape="voigt"):
+def compute_tau_H2ON2_CO2dilute(p,T,q,ppv_CO2,grid,params,RH=1.,use_numba=False,lineShape="lorentz"):
     # setup fn wrapper:   all these fns need to accept exact same args
     if use_numba:
         from .Absorption_Crosssections_HITRAN2016_numba import getKappa_HITRAN_numba
