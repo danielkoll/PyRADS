@@ -35,7 +35,7 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - python compute_olr_h2o.01.100RH.py
 
 
-NOTES:
+# Notes
 - Resolution in test scripts was chosen for relative speed, not accuracy. For research-grade output and model intercomparisons, vertical and spectral resolution need to be increased. For some reference values, see Methods in Koll & Cronin (2018).
 - 'environment.yml' assumes you're using a Mac. For Linux, change the gfortran compiler.
 - If you're using conda, don't forget to type ``conda activate pyrads'' each time before using PyRADS.
