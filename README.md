@@ -40,7 +40,8 @@ To compute OLRs for a set of surface temperatures and save the resulting output 
 - 'environment.yml' assumes you're using a Mac. For Linux, change the gfortran compiler.
 - If you're using conda, don't forget to type ``conda activate pyrads'' each time before using PyRADS.
 - The current version of PyRADS has a silent bug when using numba + computing line crosssections for multiple species (e.g., H2O + CO2 lines). By default numba is currently disabled. Until the bug is fixed don't use PyRADS + numba without additional validation.
-- Dec 2021: PyRADS allows an optional Voigt line profile. The main impact is for opacity calculations at low pressures, where the Lorentz line approximation breaks down. The current Voigt implementation is 3-4x slower than Lorentz lines and the Lorentz approximation still works well for OLR calculations that don't need to worry about stratospheres/low pressures. To switch line profiles, see OpticalThickness.py.
+- Dec 2021: PyRADS allows an optional Voigt line profile. The main impact is for opacity calculations at low pressures, where the Lorentz line approximation breaks down. The current Voigt implementation is 3-4x slower than Lorentz lines. To switch line profiles, see OpticalThickness.py.
+- Jan 2022: To compute CO2 radiative forcing for Earth-ish climates accurately, suggested spectral resolution is 0.01 cm-1. The impact of Voigt vs Lorentz line shape also becomes much less important at high spectral resolution.
 
 # Requirements
 Python 3 with numpy and scipy.
