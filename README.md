@@ -6,7 +6,6 @@ For Earth-like atmospheres, PyRADS currently uses HITRAN 2016 line lists (http:/
 Looking for a version of PyRADS that can deal with shortwave radiation (scattering)?
 https://github.com/ddbkoll/PyRADS-shortwave
 
-
 References:
 
 (1) Koll & Cronin, 2018, https://doi.org/10.1073/pnas.1809868115.
@@ -52,3 +51,5 @@ For the MTCKD continuum model: gmake and gfortran.
 
 # Acknowledgements
 PyRADS makes use of HITRAN 2016 line lists (http://hitran.org/), AER's MTCKD continuum model (http://rtweb.aer.com/continuum_frame.html), and the PyTran script published by Ray Pierrehumbert as part of the courseware for "Principles of Planetary Climates" (https://geosci.uchicago.edu/~rtp1/PrinciplesPlanetaryClimate/). Brian Rose (http://www.atmos.albany.edu/facstaff/brose/) and Andrew Williams (https://github.com/AndrewWilliams3142) have improved the code.
+
+PyRADS v1.0 is also available on [![DOI](https://zenodo.org/badge/148344478.svg)](https://zenodo.org/doi/10.5281/zenodo.10525898).
